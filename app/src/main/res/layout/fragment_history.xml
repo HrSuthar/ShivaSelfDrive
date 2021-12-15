@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_wave_2_"
+    tools:context=".bottomNav.history.HistoryFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_22sdp"
+        app:cardElevation="@dimen/_15sdp"
+        app:cardCornerRadius="@dimen/_15sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_30sdp">
+
+            <EditText
+                android:id="@+id/sourceLOC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:drawableLeft="@drawable/ic_baseline_location_on_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/_8sdp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:drawableStart="@drawable/ic_baseline_location_on_24"
+                android:hint="  Pick-up Location"
+                android:inputType="textPostalAddress"
+                android:padding="@dimen/_14sdp"
+                android:layout_margin="@dimen/_30sdp" />
+
+            <EditText
+                android:id="@+id/destinationLOC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingTop="@dimen/_8sdp"
+                android:drawableStart="@drawable/ic_baseline_add_location_24"
+                app:layout_constraintTop_toBottomOf="@+id/sourceLOC"
+                android:drawableLeft="@drawable/ic_baseline_add_location_24"
+                android:hint="  Drop Location"
+                android:inputType="textPostalAddress"
+                android:padding="@dimen/_14sdp"
+                android:layout_margin="@dimen/_30sdp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/destinationLOC"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.carrental.ShivaSD.ui.customview.DateBlock
+                        android:id="@+id/pick_up_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.carrental.ShivaSD.ui.customview.DateBlock>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.carrental.ShivaSD.ui.customview.DateBlock
+                        android:id="@+id/destination_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.carrental.ShivaSD.ui.customview.DateBlock>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Search"
+                android:backgroundTint="@color/teal_200"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="#BA000000"
+            android:gravity="center" >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleLarge"
+                android:indeterminate="true" />
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

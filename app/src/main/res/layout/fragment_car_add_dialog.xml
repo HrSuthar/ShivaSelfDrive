@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_wave_2_"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".bottomNav.home.cars.manipulate.CarAddDialogFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_22sdp"
+        app:cardElevation="@dimen/_15sdp"
+        app:cardCornerRadius="@dimen/_15sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/modelError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_car_model"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Car Model Name"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingRight="@dimen/_6sdp"
+                    android:autofillHints="Car Name" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registrationError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_reg_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Vehicle RC Number"
+                    android:maxLength="10"
+                    android:inputType="text"
+                    android:textAllCaps="true"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="RC"
+                    android:paddingRight="@dimen/_6sdp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mileageError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_mileage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Car Mileage"
+                    android:maxLength="12"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="mileage"
+                    android:paddingRight="@dimen/_6sdp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fuelError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_fuel_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Fuel Type"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="fuel"
+                    android:paddingRight="@dimen/_6sdp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/seatError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_seat_capacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Seating Capacity"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="capacity"
+                    android:paddingRight="@dimen/_6sdp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/chargesError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/add_charges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Charge's (Rate)"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="price"
+                    android:paddingRight="@dimen/_6sdp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/add_image_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:text="Upload Car Image"
+                android:backgroundTint="@color/teal_200"
+                android:textSize="16sp"
+                android:padding="@dimen/_8sdp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/add_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Cancel"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/add_Btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Add"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:id="@+id/car_add_progress"/>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

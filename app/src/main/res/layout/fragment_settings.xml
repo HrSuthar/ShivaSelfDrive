@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_wave_2_"
+    tools:context=".bottomNav.setting.SettingFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_22sdp"
+        app:cardElevation="@dimen/_15sdp"
+        app:cardCornerRadius="@dimen/_15sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_30sdp">
+
+            <TextView
+                android:id="@+id/notifyProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:layout_margin="@dimen/_30sdp"
+                android:visibility="gone"
+                android:textSize="@dimen/_22sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/notifyLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log-In or Sign-Up"
+                android:layout_margin="@dimen/_30sdp"
+                android:textSize="@dimen/_22sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notifyProfile"/>
+
+            <TextView
+                android:id="@+id/notifyLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log-Out"
+                android:layout_margin="@dimen/_30sdp"
+                android:textSize="@dimen/_22sdp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notifyLogin"/>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@+id/notifyLogOut"
+                android:layout_marginTop="@dimen/_30sdp"/>
+
+            <TextView
+                android:id="@+id/notifyWorks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/_22sdp"
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+                android:layout_margin="@dimen/_30sdp"
+                android:text="How Rento Works" />
+
+            <TextView
+                android:id="@+id/notifyContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contact Support"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/_22sdp"
+                android:layout_margin="@dimen/_30sdp"
+                app:layout_constraintTop_toBottomOf="@+id/notifyWorks" />
+
+            <TextView
+                android:id="@+id/legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_30sdp"
+                android:layout_marginBottom="0dp"
+                android:textSize="@dimen/_22sdp"
+                android:text="Legal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notifyContact" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:background="@color/teal_700"
+            android:contentDescription="ADD Admin"
+            android:visibility="invisible"
+            android:src="@drawable/ic_add_24"/>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

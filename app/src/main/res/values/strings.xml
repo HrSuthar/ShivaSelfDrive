@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Shiva Self Drive Cars</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">History</string>
+    <string name="title_notifications">Setting</string>
+
+    <string name="name_error">Please Enter FullName</string>
+    <string name="address_error">Please Enter Address</string>
+    <string name="pickup_address_error">Please Enter Pickup Address</string>
+    <string name="email_error">Please Enter Email</string>
+    <string name="error_invalid_email">Enter Valid Email</string>
+    <string name="error_invalid_phone">Enter Valid Phone No</string>
+    <string name="phone_error">Please Enter Phone No.</string>
+    <string name="password_error">Enter Valid Password</string>
+    <string name="error_invalid_password">Password Must Be Greater then 6 character</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="name">Name</string>
+    <string name="register">Register</string>
+    <string name="already_register">Already Register ! </string>
+    <string name="address">Please Enter Address</string>
+    <string name="signInMsg">Please sign in to view history !</string>
+
+
+    <string name="legal_head">Terms and Conditions of CodePen demo</string>
+    <string name="legal_message">These Terms govern</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="login">Login</string>
+    <string name="create_new">Click here for register</string>
+
+    <string name="title_activity_payment">Payment</string>
+
+    <string name="car_name_error">Please Enter Car Name</string>
+    <string name="car_mileage_error">Please Enter Mileage</string>
+    <string name="car_fuel_error">Please Enter Car Fuel Type</string>
+    <string name="car_charges_error">Please Enter Amount to Charge</string>
+    <string name="car_seat_error">Please Enter Total Number of Seat </string>
+    <string name="car_regno_error">Please Enter Valid Full RC Number</string>
+    <string name="error_invalid_seat">Seat Number Must Be Greater then 4 character</string>
+    <string name="error_invalid_rc">RC Number Must Be of 10 character</string>
+    <string name="error_invalid_image_url">Pleas Enter Valid URL</string>
+
+
+</resources>

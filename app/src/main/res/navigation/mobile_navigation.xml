@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.carrental.ShivaSD.bottomNav.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_car"
+            app:destination="@id/navigation_car" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_car_add"
+            app:destination="@id/navigation_car_add"/>
+        <action
+            android:id="@+id/action_navigation_home_to_carRemoveFragment"
+            app:destination="@id/carRemoveFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_car"
+        android:name="com.carrental.ShivaSD.bottomNav.home.cars.CarsFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/z_activity_car" >
+        <action
+            android:id="@+id/action_navigation_car_to_navigation_booking"
+            app:destination="@id/navigation_booking" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_booking"
+        android:name="com.carrental.ShivaSD.bottomNav.home.cars.BookingFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/z_activity_booking" >
+        <action
+            android:id="@+id/action_navigation_booking_to_navigation_checkout"
+            app:destination="@id/navigation_checkout" />
+        <action
+            android:id="@+id/action_navigation_booking_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_checkout"
+        android:name="com.carrental.ShivaSD.bottomNav.home.cars.CheckoutFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/z_activity_checkout" >
+        <action
+            android:id="@+id/action_navigation_checkout_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@+id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.carrental.ShivaSD.bottomNav.history.HistoryFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_navigation_history_to_searchhistoryFragment"
+            app:destination="@id/searchHistoryFragment" />
+        <action
+            android:id="@+id/action_navigation_history_to_login"
+            app:destination="@id/login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.SettingFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_navigation_notifications_to_developing"
+            app:destination="@id/navigation_developing" />
+        <action
+            android:id="@+id/action_navigation_setting_to_login"
+            app:destination="@id/login" />
+        <action
+            android:id="@+id/action_navigation_setting_to_registration"
+            app:destination="@id/registration" />
+        <action
+            android:id="@+id/action_navigation_setting_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/searchHistoryFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.history.searchfrag.SearchFragment"
+        android:label="fragment_item_search_list"
+        tools:layout="@layout/fragment_search_item_list"/>
+
+    <fragment
+        android:id="@+id/navigation_car_add"
+        android:name="com.carrental.ShivaSD.bottomNav.home.cars.manipulate.CarAddDialogFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_car_add_dialog" >
+        <action
+            android:id="@+id/action_navigation_car_add_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_developing"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.Developing"
+        android:label="fragment_developing"
+        tools:layout="@layout/fragment_developing" />
+
+    <fragment
+        android:id="@+id/login"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_to_registration"
+            app:destination="@id/registration" />
+        <action
+            android:id="@+id/action_login_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registration"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.Registration"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registration_to_login"
+            app:destination="@id/login" />
+    </fragment>
+    <fragment
+        android:id="@+id/carRemoveFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.home.cars.manipulate.CarRemoveFragment"
+        android:label="fragment_car_remove"
+        tools:layout="@layout/fragment_car_remove" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.carrental.ShivaSD.PaymentActivity"
+        android:label="fragment_payment"
+        tools:layout="@layout/activity_payment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>
