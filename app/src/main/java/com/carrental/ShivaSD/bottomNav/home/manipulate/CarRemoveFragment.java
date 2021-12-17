@@ -1,4 +1,4 @@
-package com.carrental.ShivaSD.bottomNav.home.cars.manipulate;
+package com.carrental.ShivaSD.bottomNav.home.manipulate;
 
 import android.os.Bundle;
 

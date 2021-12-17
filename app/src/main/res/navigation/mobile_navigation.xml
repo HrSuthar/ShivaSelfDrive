@@ -95,7 +95,7 @@
 
     <fragment
         android:id="@+id/navigation_car_add"
-        android:name="com.carrental.ShivaSD.bottomNav.home.cars.manipulate.CarAddDialogFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.home.manipulate.CarAddDialogFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_car_add_dialog" >
         <action
@@ -133,7 +133,7 @@
     </fragment>
     <fragment
         android:id="@+id/carRemoveFragment"
-        android:name="com.carrental.ShivaSD.bottomNav.home.cars.manipulate.CarRemoveFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.home.manipulate.CarRemoveFragment"
         android:label="fragment_car_remove"
         tools:layout="@layout/fragment_car_remove" />
     <fragment

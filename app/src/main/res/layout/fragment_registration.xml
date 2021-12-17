@@ -145,6 +145,21 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <EditText
+                android:id="@+id/otp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginEnd="30dp"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:background="@drawable/edit_text_border"
+                android:hint="Enter OTP"
+                android:padding="@dimen/_12sdp"
+                android:autofillHints="Enter OTP"
+                android:inputType="number" />
+
             <Button
                 android:id="@+id/register"
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.carrental.ShivaSD.bottomNav.setting;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,14 +17,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carrental.ShivaSD.R;
+import com.carrental.ShivaSD.bottomNav.home.mailer.sendMail;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.util.Properties;
+import java.util.Random;
+
+import javax.mail.Session;
+
 public class Registration extends Fragment {
 
 
-    EditText name, email, phone, password, address;
+    EditText name, email, phone, password, address, reg_otp;
     Button register;
     TextView login, whichUser;
     boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid;
@@ -49,6 +58,7 @@ public class Registration extends Fragment {
         address =  root.findViewById(R.id.address);
         login =  root.findViewById(R.id.login);
         register =  root.findViewById(R.id.register);
+        reg_otp = root.findViewById(R.id.otp);
         nameError =  root.findViewById(R.id.nameError);
         emailError =  root.findViewById(R.id.emailError);
         phoneError =  root.findViewById(R.id.phoneError);
@@ -60,6 +70,7 @@ public class Registration extends Fragment {
         } else whichUser.setText("User");
 
         register.setOnClickListener(v -> {
+            reg_otp.setVisibility(View.VISIBLE);
             if(SetValidation(v)){
                 regRef.child(phone.getText().toString()).child("Name").setValue(name.getText().toString());
                 regRef.child(phone.getText().toString()).child("Email").setValue(email.getText().toString());
@@ -130,7 +141,17 @@ public class Registration extends Fragment {
 
         if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
             Toast.makeText(v.getContext(), "Registration Successfully", Toast.LENGTH_SHORT).show();
-            return true;
+
+            Random rand = new Random();
+            int n = rand.nextInt(55320) + 1;
+            String msg = "Please Enter "+ n+" as your OTP for Verification ->";
+
+            new sendMail("Your OTP FOR Shiva Self Drive application ",
+                    msg,
+                    email.getText().toString(),
+                    this.getContext()).execute();
+
+            return reg_otp.getText().toString().equals(String.valueOf(n));
         }
         return false;
     }

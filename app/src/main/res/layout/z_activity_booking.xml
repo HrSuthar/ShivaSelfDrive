@@ -73,7 +73,7 @@
                         android:src="@drawable/date"
                         android:layout_marginRight="@dimen/_8sdp" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/pick_up_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                             android:src="@drawable/date"
                             android:layout_marginRight="@dimen/_8sdp" />
 
-                        <EditText
+                        <AutoCompleteTextView
                             android:id="@+id/drop_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -492,6 +492,30 @@
                                     android:hint="Eg: 0727272727"
                                     android:textColor="@color/colorOnPrimary" />
                             </TableRow>
+
+                            <TableRow
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:paddingTop="@dimen/_8sdp">
+
+                                <EditText
+                                    android:id="@+id/otp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_marginStart="30dp"
+                                    android:layout_marginTop="@dimen/_12sdp"
+                                    android:layout_marginEnd="30dp"
+                                    android:gravity="center_vertical"
+                                    android:visibility="gone"
+                                    android:background="@drawable/edit_text_border"
+                                    android:hint="Enter OTP"
+                                    android:padding="@dimen/_12sdp"
+                                    android:autofillHints="Enter OTP"
+                                    android:inputType="number" />
+
+                            </TableRow>
+
                         </TableLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -571,4 +595,17 @@
                 android:textSize="@dimen/_13sdp" />
 
         </LinearLayout>
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab_manu_area"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:clickable="true"-->
+<!--        android:visibility="visible"-->
+<!--        android:background="@color/teal_700"-->
+<!--        android:src="@drawable/ic_baseline_delete_24"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/fab_add"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/fab_add"-->
+<!--        android:contentDescription="Add/Remove Area"-->
+<!--        android:focusable="true" />-->
 </ScrollView>

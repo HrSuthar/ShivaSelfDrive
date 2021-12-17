@@ -47,6 +47,8 @@ public class CheckoutFragment extends Fragment {
         rentalTime.setText(cDetails[2]);
         TextView rentalCost = root.findViewById(R.id.rental_price);
         rentalCost.setText(cDetails[7]);
+        TextView finalCost = root.findViewById(R.id.final_rental_price);
+        finalCost.setText(cDetails[11]);
 
     // Firebase Date Store
         regRef.child(cDetails[6]).child(carList[6]).child("CarName").setValue(carList[0]);
@@ -55,7 +57,7 @@ public class CheckoutFragment extends Fragment {
         regRef.child(cDetails[6]).child(carList[6]).child("Source").setValue(cDetails[0]);
         regRef.child(cDetails[6]).child(carList[6]).child("Destination").setValue(cDetails[9]);
         regRef.child(cDetails[6]).child(carList[6]).child("CarImage").setValue(carList[5]);
-        regRef.child(cDetails[6]).child(carList[6]).child("AmountPaid").setValue(cDetails[7]);
+        regRef.child(cDetails[6]).child(carList[6]).child("AmountPaid").setValue(cDetails[11]);
         regRef.child(cDetails[6]).child(carList[6]).child("UserName").setValue(cDetails[3]);
 
 

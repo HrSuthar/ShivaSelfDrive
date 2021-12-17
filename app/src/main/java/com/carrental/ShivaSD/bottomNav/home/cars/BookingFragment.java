@@ -10,6 +10,8 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -29,7 +31,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.carrental.ShivaSD.PaymentActivity;
 import com.carrental.ShivaSD.R;
-import com.carrental.ShivaSD.bottomNav.home.cars.mailer.sendMail;
+import com.carrental.ShivaSD.bottomNav.home.mailer.sendMail;
 import com.carrental.ShivaSD.ui.customview.DateBlock;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -38,29 +40,53 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BookingFragment extends Fragment {
 
     FrameLayout mWrapperFL;
     TextView bookingCar;
-    private EditText pickUpLocation, dropLocation;
+    private AutoCompleteTextView pickUpLocation, dropLocation;
     SwitchCompat switchCompat;
     LinearLayout linearLayout;
     CardView cardViewCustomerDetails;
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "myPref";
     private static final String KEY_USERID = "phone";
-
+    double p1,bp,tp;
     private DateBlock startDateBlock, endDateBlock;
     String userId;
     TextView dailyPrice,bookPrice, extraHour, tax, totalAmount;
-    EditText name, address, email, phone;
+    EditText name, address, email, phone, otp;
     String cName, cAddress, cEmail, cPhone, cPickDate,cPickTime, cDropDate, cDropTime, cPickupL, cDropL;
-    String[] CustomerDetail,template;
+    String[] CustomerDetail, template;
+
+    private static final String[] SURAT_AREAS = new String[] {
+
+            "Piplod", "Athwalines", "Surat Dumas Road", "Ghod Dod Road", "City Light",
+            "Vesu",  "Katargam", "Adajan",  "Althan", "Canal Road", "VIP Road", "Varachha",
+            "Kharwar Nagar", "Rander Road", "Rander", "Navagam", "Hazira - Adajan Road",
+            "Vishnu Nagar", "Bhimrad", "Dahin Nagar", "Jahangir Pura", "Bhestan", "Saroli",
+            "Parvat Gam", "Anand Mahal Road", "Bardoli", "Pal Gam", "Mota Varachha",
+            "Olpad", "Athwa Gate", "Udhna", "Amroli", "Palsana", "Dindoli", "Palanpur Gam",
+            "Sachin", "Pankaj Nagar", "Jahangirabad", "Sagrampura", "Mota", "Maroli", "Parvat Patiya",
+            "Mahindra Pur", "Godadara", "Saniya Hemad", "Khodiyar Nagar", "Nanpura", "Athwa",
+            "Kapodra", "Gothan", "Kamrej", "Salabatpura","Majura Gate","Kadodara","Laskana","Patel Nagar",
+            "Pandesara", "Limbayat", "Gopipura", "Mughal Sarai", "Rustampura", "Bamroligam", "Begampura",
+            "Kim", "Kosamba", "Kadodara Nagar","Bhatar", "Shahpore","Kumbharia Gam","Nana Varachha",
+            "Mahuva","Chowk Bazar","Sayan","Haripura","Mahadev Nagar","Vidhey Nagar","Umarwada",
+            "New City Light", "Tadwadi", "Punagam", "Sima Nagar", "Karamala", "Mandvi", "Dabholi",
+            "Magob", "Limla", "Shakti Nagar", "Palanpur Jakatnaka", "Pasodara", "Nanavat", "Narthan",
+            "Vareli", "Dumas", "Navsari Road", "Narotam Nagar", "Hazira", "Uttran",
+            "New City Light Road", "Ichchhapor", "Ambanagar", "Masma", "Mosali"
+    };
+
 
     RadioButton payLater, payNow;
     RadioGroup paymentGrp;
@@ -92,6 +118,7 @@ public class BookingFragment extends Fragment {
         address = root.findViewById(R.id.customer_address);
         email = root.findViewById(R.id.customer_email);
         phone = root.findViewById(R.id.customer_phone);
+        otp = root.findViewById(R.id.otp);
         cName = name.getText().toString();
         cAddress = address.getText().toString();
         cEmail = email.getText().toString();
@@ -121,10 +148,14 @@ public class BookingFragment extends Fragment {
         Glide.with(root).load(carList[5]).into(carImage);
         mWrapperFL = root.findViewById(R.id.flWrapper);
 
+        ArrayAdapter<String> dropDownAdapter = new ArrayAdapter<>(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line, SURAT_AREAS);
         bookingCar = root.findViewById(R.id.booking_car_name);
         bookingCar.setText(carList[0]);
         pickUpLocation = root.findViewById(R.id.pick_up_address);
+        pickUpLocation.setAdapter(dropDownAdapter);
         dropLocation = root.findViewById(R.id.drop_address);
+        dropLocation.setAdapter(dropDownAdapter);
         startDateBlock = root.findViewById(R.id.pick_up_date);
         endDateBlock = root.findViewById(R.id.destination_date);
         switchCompat = root.findViewById(R.id.same_location);
@@ -135,10 +166,10 @@ public class BookingFragment extends Fragment {
 
         autoloadDate();
 
-        double p1 = Integer.parseInt(carList[4].substring(1));
+        p1 = Integer.parseInt(carList[4].substring(1));
         double ehp = p1*0.08;
-        double tp = p1*0.18;
-        double bp = 500;
+        tp = p1*0.18;
+        bp = 500;
         String rs = "₹";
         dailyPrice = root.findViewById(R.id.daily_price);
         dailyPrice.setText(carList[4]);
@@ -159,25 +190,42 @@ public class BookingFragment extends Fragment {
         Button confirmButton = root.findViewById(R.id.confirmBtn);
 
         startDateBlock.setOnClickListener(v -> {
-            new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(year, month, dayOfMonth);
-                startDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime()),
-                        month, String.valueOf(year));
-            }, sYear, sMonth, sDay).show();
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                startDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                        .format(calendar.getTime()), month, String.valueOf(year));
+                new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
+                    Calendar datetime = Calendar.getInstance();
+                    Calendar c = Calendar.getInstance();
+                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay -1);
+                    datetime.set(Calendar.MINUTE, minute);
+                    if (datetime.getTimeInMillis() >= c.getTimeInMillis())
+                        startDateBlock.setTime(hourOfDay + ":" + minute);
+                    else
+                        Toast.makeText(getContext(), "Atleast 1 hours Time Difference Require", Toast.LENGTH_LONG).show();
+                }, sHour,sMin,false).show();
+            }, sYear, sMonth, sDay);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            datePickerDialog.show();
 
-            new TimePickerDialog(getContext(), (view, hourOfDay, minute) ->
-                    startDateBlock.setTime(hourOfDay + ":"+minute), sHour,sMin,false).show();
         });
 
         endDateBlock.setOnClickListener(v -> {
-            new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(year, month, dayOfMonth);
-                endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US).format(calendar.getTime()),
-                        month, String.valueOf(year));
-            }, dYear, dMonth, dDay).show();
-
-            new TimePickerDialog(getContext(), (view, hourOfDay, minute) ->
-                    startDateBlock.setTime(hourOfDay + ":"+minute), sHour,sMin,false).show();
+           DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                                .format(calendar.getTime()), month, String.valueOf(year));
+                new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
+                   Calendar datetime = Calendar.getInstance();
+                   Calendar c = Calendar.getInstance();
+                   datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                   datetime.set(Calendar.MINUTE, minute);
+                   if (datetime.getTimeInMillis() >= c.getTimeInMillis())
+                       endDateBlock.setTime(hourOfDay + ":" + minute);
+                   else
+                       Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
+               }, sHour,sMin,false).show();
+            }, dYear, dMonth, dDay);
+           datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+           datePickerDialog.show();
         });
 
 
@@ -189,6 +237,7 @@ public class BookingFragment extends Fragment {
             }
         });
         confirmButton.setOnClickListener(v -> {
+            otp.setVisibility(View.VISIBLE);
             Bundle bundle = reFetchData(carList);
             if(SetValidation(v)){
                 try {
@@ -246,16 +295,32 @@ public class BookingFragment extends Fragment {
         cPickTime = startDateBlock.getTime();
         cDropDate = endDateBlock.getDate();
         cDropTime = endDateBlock.getTime();
+        long Diff = 0;
+        SimpleDateFormat format = new SimpleDateFormat("EEEE",Locale.US);
+        try {
+            Date date1 = format.parse(cPickDate);
+            Date date2 = format.parse(cDropDate);
+            assert date2 != null;
+            assert date1 != null;
+            Diff = date2.getTime() - date1.getTime();
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        String finalAmount;
+        if(Diff >=1) finalAmount = String.valueOf(Diff * (p1+bp+tp));
+        else finalAmount = String.valueOf(p1+bp+tp);
+
         String vehRegNo = carList[6];
         CustomerDetail = new String[]{
                 cPickupL, cPickDate, cPickTime
                 , cName, cAddress, cEmail, cPhone
                 , totalAmount.getText().toString()
-                , cDropDate, cDropL, vehRegNo};
+                , cDropDate, cDropL, vehRegNo,finalAmount};
         template = new String[]{
                 "Pickup Loc:","Date:      ","Time:      "
                 ,"Name:      ","Address:   ","Email:     ","Contact:   "
-                ,"Amount:    ", "ReturnDate:", "Drop Loc:  ", "RC Number: "};
+                ,"Amount:    ", "ReturnDate:", "Drop Loc:  ", "RC Number: ", "Final Amount"};
 
         Bundle bundle = new Bundle();
         bundle.putStringArray("BookedCar",carList);
@@ -311,9 +376,22 @@ public class BookingFragment extends Fragment {
             isPhoneValid = true;
         }
 
-        if (isNameValid && isPhoneValid && isPickupAddressValid) {
+        if (isNameValid && isPhoneValid && isPickupAddressValid && isEmailValid && isAddressValid) {
             Toast.makeText(v.getContext(), "Validation Successfully", Toast.LENGTH_SHORT).show();
-            return true;
+
+            if(!userId.equals("007")) {
+                Random rand = new Random();
+                int n = rand.nextInt(55320) + 6;
+                String msg = "Please Enter " + n + " as your OTP for Verification ->";
+
+                new sendMail("Your OTP FOR Shiva Self Drive application ",
+                        msg,
+                        email.getText().toString(),
+                        this.getContext()).execute();
+
+                return otp.getText().toString().equals(String.valueOf(n));
+            }else
+                return true;
         }
         return false;
     }

@@ -1,4 +1,4 @@
-package com.carrental.ShivaSD.bottomNav.home.cars.mailer;
+package com.carrental.ShivaSD.bottomNav.home.mailer;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
