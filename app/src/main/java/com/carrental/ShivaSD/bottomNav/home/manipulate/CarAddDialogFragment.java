@@ -88,10 +88,10 @@ public class CarAddDialogFragment extends Fragment {
         addBtn.setOnClickListener(v -> {
             if(SetValidation(v)){
                 progressBar.setVisibility(View.VISIBLE);
+                uploadToFirebase();
                 new Handler().postDelayed(() -> {
-                    uploadToFirebase();
                     progressBar.setVisibility(View.GONE);
-                    Navigation.findNavController(v).popBackStack();
+                    Navigation.findNavController(v).popBackStack(R.id.navigation_home,false);
                 },4000);
             }
         });

@@ -59,7 +59,7 @@
                     android:layout_marginTop="10dp"
                     android:hint="Vehicle RC Number"
                     android:maxLength="10"
-                    android:inputType="text"
+                    android:inputType="textCapCharacters"
                     android:textAllCaps="true"
                     android:paddingStart="@dimen/_6sdp"
                     android:singleLine="true"

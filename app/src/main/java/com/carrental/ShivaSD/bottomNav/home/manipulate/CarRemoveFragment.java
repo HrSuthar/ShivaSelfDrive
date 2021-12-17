@@ -43,15 +43,12 @@ public class CarRemoveFragment extends Fragment {
 
         RemoveBtn.setOnClickListener(v -> {
             if(SetValidation(v)){
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.child("carRegNumber").getChildren()) {
-                            Toast.makeText(root.getContext(), RCNo.getText().toString(),Toast.LENGTH_LONG).show();
-
                             if (String.valueOf(dataSnapshot.getValue()).equals(RCNo.getText().toString())) {
                                 String carNumber = dataSnapshot.getKey();
-                                Toast.makeText(root.getContext(),carNumber,Toast.LENGTH_LONG).show();
                                 assert carNumber != null;
                                 myRef.child("carRegNumber").child(carNumber).removeValue();
                                 myRef.child("capacity").child(carNumber).removeValue();
@@ -68,7 +65,9 @@ public class CarRemoveFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(root.getContext(), "Entry Not Found", Toast.LENGTH_LONG).show();
+                    }
                 });
             }
         });

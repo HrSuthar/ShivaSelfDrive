@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.carrental.ShivaSD.R;
@@ -29,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
     String[][] carModels;
     FloatingActionButton floatingActionButton, fabAdd, fabRemove;
     SharedPreferences sharedPreferences;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private static final String SHARED_PREF_NAME = "myPref";
     private static final String KEY_ADMIN = "admin";
 
@@ -46,11 +48,12 @@ public class HomeFragment extends Fragment {
     Animation fromBottom ;
     Animation toBottom ;
     Boolean fabClicked = false;
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        root = inflater.inflate(R.layout.fragment_home, container, false);
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String admin = sharedPreferences.getString(KEY_ADMIN, "false");
 
@@ -62,7 +65,52 @@ public class HomeFragment extends Fragment {
         fabAdd = root.findViewById(R.id.fab_add);
         fabRemove = root.findViewById(R.id.fab_remove);
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        mSwipeRefreshLayout = root.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        // Fetching data from server
+        mSwipeRefreshLayout.post(this::DataFetchFromFirebase);
+
+        if(admin.equals("true")) {
+            floatingActionButton.setVisibility(View.VISIBLE);
+            floatingActionButton.setOnClickListener(v -> {
+                if(!fabClicked) {
+                    fabAdd.setVisibility(View.VISIBLE);
+                    fabRemove.setVisibility(View.VISIBLE);
+                    fabAdd.startAnimation(fromBottom);
+                    fabRemove.startAnimation(fromBottom);
+                    floatingActionButton.startAnimation(rotateOpen);
+                }else{
+                    floatingActionButton.startAnimation(rotateClose);
+                    fabAdd.startAnimation(toBottom);
+                    fabRemove.startAnimation(toBottom);
+                    fabAdd.setVisibility(View.GONE);
+                    fabRemove.setVisibility(View.GONE);
+                }
+                fabClicked = !fabClicked;
+            });
+
+            fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
+                    .navigate(R.id.action_navigation_home_to_navigation_car_add));
+            fabRemove.setOnClickListener(v -> Navigation.findNavController(v)
+                    .navigate(R.id.action_navigation_home_to_carRemoveFragment));
+        }
+
+        return root;
+    }
+
+    @Override
+    public void onRefresh() {
+        DataFetchFromFirebase();
+    }
+
+    void DataFetchFromFirebase(){
+        mSwipeRefreshLayout.setRefreshing(true);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 long ccnt = dataSnapshot.getChildrenCount();
@@ -103,40 +151,15 @@ public class HomeFragment extends Fragment {
                     carModels[i][6] = snapshot.getValue(String.class);
                     i++;
                 }
+                mSwipeRefreshLayout.setRefreshing(false);
                 createView(root);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
                 Snackbar.make(root,"Unable to Connect to Server !!!", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         });
-
-        if(admin.equals("true")) {
-            floatingActionButton.setVisibility(View.VISIBLE);
-            floatingActionButton.setOnClickListener(v -> {
-                if(!fabClicked) {
-                    fabAdd.setVisibility(View.VISIBLE);
-                    fabRemove.setVisibility(View.VISIBLE);
-                    fabAdd.startAnimation(fromBottom);
-                    fabRemove.startAnimation(fromBottom);
-                    floatingActionButton.startAnimation(rotateOpen);
-                }else{
-                    floatingActionButton.startAnimation(rotateClose);
-                    fabAdd.startAnimation(toBottom);
-                    fabRemove.startAnimation(toBottom);
-                    fabAdd.setVisibility(View.GONE);
-                    fabRemove.setVisibility(View.GONE);
-                }
-                fabClicked = !fabClicked;
-            });
-
-            fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
-                    .navigate(R.id.action_navigation_home_to_navigation_car_add));
-            fabRemove.setOnClickListener(v -> Navigation.findNavController(v)
-                    .navigate(R.id.action_navigation_home_to_carRemoveFragment));
-        }
-
-        return root;
     }
 
     public void createView(final View root) {
@@ -151,5 +174,4 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
     }
-
 }

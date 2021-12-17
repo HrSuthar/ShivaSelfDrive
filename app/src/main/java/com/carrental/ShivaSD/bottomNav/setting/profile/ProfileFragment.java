@@ -1,4 +1,4 @@
-package com.carrental.ShivaSD.bottomNav.setting;
+package com.carrental.ShivaSD.bottomNav.setting.profile;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carrental.ShivaSD.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileFragment extends Fragment {
 
     ImageView profImg;
+    FloatingActionButton fabAdd;
     TextView profName, profContact, profEmail, profAddress, profUserType;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("USER");
     SharedPreferences sharedPreferences;
@@ -43,8 +46,12 @@ public class ProfileFragment extends Fragment {
         profContact = root.findViewById(R.id.profile_contact);
         profEmail = root.findViewById(R.id.profile_mail);
         profAddress = root.findViewById(R.id.profile_address);
+        fabAdd = root.findViewById(R.id.fab_add);
         profUserType =  root.findViewById(R.id.profile_userType);
         profUserType.setText("User");
+
+        fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
+                .navigate(R.id.action_navigation_home_to_navigation_car_add));
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

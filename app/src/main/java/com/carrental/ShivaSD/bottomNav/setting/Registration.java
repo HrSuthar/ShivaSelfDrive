@@ -1,12 +1,8 @@
 package com.carrental.ShivaSD.bottomNav.setting;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +12,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.carrental.ShivaSD.R;
 import com.carrental.ShivaSD.bottomNav.home.mailer.sendMail;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.util.Properties;
 import java.util.Random;
-
-import javax.mail.Session;
 
 public class Registration extends Fragment {
 
@@ -35,8 +29,8 @@ public class Registration extends Fragment {
     EditText name, email, phone, password, address, reg_otp;
     Button register;
     TextView login, whichUser;
-    boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid;
-    TextInputLayout nameError, emailError, phoneError, passError;
+    boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid, isAddressValid;
+    TextInputLayout nameError, emailError, phoneError, passError, addressError;
     DatabaseReference regRef = FirebaseDatabase.getInstance().getReference("USER");
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "myPref";
@@ -139,7 +133,15 @@ public class Registration extends Fragment {
             passError.setErrorEnabled(false);
         }
 
-        if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
+        if (address.getText().toString().isEmpty()) {
+            addressError.setError(getResources().getString(R.string.address_error));
+            isAddressValid = false;
+        } else  {
+            isAddressValid = true;
+        }
+
+
+        if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid && isAddressValid) {
             Toast.makeText(v.getContext(), "Registration Successfully", Toast.LENGTH_SHORT).show();
 
             Random rand = new Random();

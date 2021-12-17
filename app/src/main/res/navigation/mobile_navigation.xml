@@ -143,7 +143,7 @@
         tools:layout="@layout/activity_payment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.carrental.ShivaSD.bottomNav.setting.ProfileFragment"
+        android:name="com.carrental.ShivaSD.bottomNav.setting.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 

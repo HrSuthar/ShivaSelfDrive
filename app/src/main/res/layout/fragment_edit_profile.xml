@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_wave_2_"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".bottomNav.home.manipulate.CarRemoveFragment">
+    tools:context=".bottomNav.setting.profile.EditProfileFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -23,72 +22,98 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/modelError"
+                android:id="@+id/phoneError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
 
                 <EditText
-                    android:id="@+id/car_model"
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Car Model Name"
-                    android:inputType="textNoSuggestions"
+                    android:hint="@string/phone_number"
+                    android:maxLength="12"
+                    android:inputType="number"
                     android:maxLines="1"
-                    android:padding="@dimen/_12sdp"
-                    android:autofillHints="Car Name" />
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="phone"
+                    android:paddingRight="@dimen/_6sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/registrationError"
+                android:id="@+id/addressError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
 
                 <EditText
-                    android:id="@+id/reg_no"
+                    android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Vehicle RC Number"
-                    android:maxLength="10"
-                    android:textAllCaps="true"
-                    android:inputType="textCapCharacters"
-                    android:padding="@dimen/_12sdp"
-                    android:autofillHints="RC" />
+                    android:hint="@string/address"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_6sdp"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingEnd="@dimen/_6sdp"
+                    android:autofillHints="password"
+                    android:paddingRight="@dimen/_6sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/add_profile_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:text="Profile Photo"
+                android:backgroundTint="@color/teal_200"
+                android:textSize="16sp"
+                android:padding="@dimen/_8sdp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/_30sdp"
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/remove_cancel"
+                    android:id="@+id/cancel_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:padding="@dimen/_12sdp"
                     android:backgroundTint="@color/colorPrimary"
                     android:text="Cancel"
                     android:textSize="16sp" />
 
                 <Button
-                    android:id="@+id/remove_Btn"
+                    android:id="@+id/change_Btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:padding="@dimen/_12sdp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:text="Remove"
+                    android:text="Change"
                     android:textSize="16sp" />
-
             </LinearLayout>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:id="@+id/car_add_progress"/>
+
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
