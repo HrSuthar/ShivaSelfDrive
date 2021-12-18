@@ -304,7 +304,7 @@ public class BookingFragment extends Fragment {
         cDropDate = endDateBlock.getDate();
         cDropTime = endDateBlock.getTime();
         long Diff = 0;
-        SimpleDateFormat format = new SimpleDateFormat("EEEE",Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy",Locale.US);
         try {
             Date date1 = format.parse(cPickDate);
             Date date2 = format.parse(cDropDate);

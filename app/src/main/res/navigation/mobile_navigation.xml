@@ -91,7 +91,11 @@
         android:id="@+id/searchHistoryFragment"
         android:name="com.carrental.ShivaSD.bottomNav.history.searchfrag.SearchFragment"
         android:label="fragment_item_search_list"
-        tools:layout="@layout/fragment_search_item_list"/>
+        tools:layout="@layout/fragment_search_item_list">
+        <action
+            android:id="@+id/action_searchHistoryFragment_to_navigation_history"
+            app:destination="@id/navigation_history" />
+    </dialog>
 
     <fragment
         android:id="@+id/navigation_car_add"

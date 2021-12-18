@@ -1,15 +1,15 @@
 package com.carrental.ShivaSD.bottomNav.history.searchfrag;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carrental.ShivaSD.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SearchFragment extends BottomSheetDialogFragment {
+
 
     @Override
     public int getTheme() {
@@ -86,7 +87,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
     }
 
 
-    public static class ItemAdapter extends RecyclerView.Adapter<ViewHolder> {
+    public class ItemAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         ArrayList<String[]> histDetails;
         RequestManager glide;
@@ -120,16 +121,38 @@ public class SearchFragment extends BottomSheetDialogFragment {
             String RCNo = histDetails.get(position)[7];
             String Phone = histDetails.get(position)[9];
 
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEE", Locale.US);
+            DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("HISTORY");
+            final String[] status = new String[1];
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    status[0] = snapshot.child(Phone).child(RCNo).child("Status").getValue(String.class);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
             try {
                Date date = formatter.parse(histDetails.get(position)[5]);
                 Calendar calender = Calendar.getInstance();
+                assert date != null;
                 calender.setTime(date);
                 long msDiff = Calendar.getInstance().getTimeInMillis() - calender.getTimeInMillis();
                 long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
-                if(daysDiff<0) {
-                    holder.cancelBook.setVisibility(View.VISIBLE);
-                    holder.cancelBook.setOnClickListener(v -> alertSnackBar(v,Phone,RCNo));
+                if(daysDiff<=0) {
+                    new Handler().postDelayed(() -> {
+                        if(status[0].equals("Success")) {
+                            holder.cancelBook.setVisibility(View.VISIBLE);
+                            holder.cancelBook.setOnClickListener(v -> {
+                                myRef.child(Phone).child(RCNo).child("Status").setValue("Cancelled");
+                                Toast.makeText(v.getContext(), "Booking Cancelled SuccessFul", Toast.LENGTH_LONG).show();
+                                SearchFragment.this.dismiss();
+                            });
+                        }
+                    }, 1000);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -142,21 +165,5 @@ public class SearchFragment extends BottomSheetDialogFragment {
             return histDetails.size();
         }
     }
-
-    private static void alertSnackBar(View v, String phone, String RCNo){
-
-        DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("HISTORY");
-        Snackbar snackbar = Snackbar
-                .make(v, "Confirm delete?", Snackbar.LENGTH_LONG)
-                .setAction("YES", view -> {
-                    myRef.child(phone).child(RCNo).child("Status").setValue("Cancelled");
-                    Snackbar mSnackbar = Snackbar.make(v, "Booking successfully deleted.", Snackbar.LENGTH_SHORT);
-                    mSnackbar.show();
-                });
-
-        snackbar.show();
-    }
-
-
 
 }
