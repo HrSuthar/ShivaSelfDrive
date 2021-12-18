@@ -134,7 +134,7 @@ public class HistoryFragment extends Fragment {
                                 String rtnDate = String.valueOf(dataSnapshot1.child("ReturnDate").getValue());
                                 String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
                                 String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());
-    // image ,carname, carloc, destLoc, rtndate, pickupdate, priceString, RCno
+    // image ,carname, carloc, destLoc, rtndate, pickupdate, priceString, RCno, Status, Phone
                                 if (deptLOC.equals(srcLOC) & rtnLOC.equals(destLOC) & rtnDate.equals(destDate)) {
                                     histDetails.add(new String[]{
                                             dataSnapshot1.child("CarImage").getValue(String.class),
@@ -144,7 +144,9 @@ public class HistoryFragment extends Fragment {
                                             String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
                                             srcDate,
                                             dataSnapshot1.child("AmountPaid").getValue(String.class),
-                                            dataSnapshot1.getKey()
+                                            dataSnapshot1.getKey(),
+                                            dataSnapshot1.child("Status").getValue(String.class),
+                                            userID
                                     });
                                 }
                             }
@@ -162,7 +164,9 @@ public class HistoryFragment extends Fragment {
                                             String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
                                             deptDate,
                                             String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
-                                            dataSnapshot1.getKey()
+                                            dataSnapshot1.getKey(),
+                                            dataSnapshot1.child("Status").getValue(String.class),
+                                            userID
                                     });
                                 }
                             }
@@ -179,7 +183,9 @@ public class HistoryFragment extends Fragment {
                                             String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
                                             String.valueOf(dataSnapshot1.child("DepartDate").getValue()),
                                             String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
-                                            dataSnapshot1.getKey()
+                                            dataSnapshot1.getKey(),
+                                            dataSnapshot1.child("Status").getValue(String.class),
+                                            userID
                                     });
                                 }
                             }
@@ -195,7 +201,9 @@ public class HistoryFragment extends Fragment {
                                             String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
                                             String.valueOf(dataSnapshot1.child("DepartDate").getValue()),
                                             String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
-                                            dataSnapshot1.getKey()
+                                            dataSnapshot1.getKey(),
+                                            dataSnapshot1.child("Status").getValue(String.class),
+                                            userID
                                     });
                                 }
                             }
@@ -209,7 +217,9 @@ public class HistoryFragment extends Fragment {
                                         String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
                                         String.valueOf(dataSnapshot1.child("DepartDate").getValue()),
                                         String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
-                                        dataSnapshot1.getKey()
+                                        dataSnapshot1.getKey(),
+                                        dataSnapshot1.child("Status").getValue(String.class),
+                                        userID
                                 });
                             }
                         }
