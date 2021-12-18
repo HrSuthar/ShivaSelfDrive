@@ -25,9 +25,9 @@ import java.util.Random;
 
 public class Registration extends Fragment {
 
-
+    int n;
     EditText name, email, phone, password, address, reg_otp;
-    Button register;
+    Button register, registerNow;
     TextView login, whichUser;
     boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid, isAddressValid;
     TextInputLayout nameError, emailError, phoneError, passError, addressError;
@@ -52,6 +52,7 @@ public class Registration extends Fragment {
         address =  root.findViewById(R.id.address);
         login =  root.findViewById(R.id.login);
         register =  root.findViewById(R.id.register);
+        registerNow = root.findViewById(R.id.register_now);
         reg_otp = root.findViewById(R.id.otp);
         nameError =  root.findViewById(R.id.nameError);
         emailError =  root.findViewById(R.id.emailError);
@@ -65,18 +66,30 @@ public class Registration extends Fragment {
 
         register.setOnClickListener(v -> {
             reg_otp.setVisibility(View.VISIBLE);
+            register.setVisibility(View.GONE);
+            registerNow.setVisibility(View.VISIBLE);
             if(SetValidation(v)){
-                regRef.child(phone.getText().toString()).child("Name").setValue(name.getText().toString());
-                regRef.child(phone.getText().toString()).child("Email").setValue(email.getText().toString());
-                regRef.child(phone.getText().toString()).child("Password").setValue(password.getText().toString());
-                regRef.child(phone.getText().toString()).child("Address").setValue(address.getText().toString());
-                regRef.child(phone.getText().toString()).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/images%2Finnova.png?alt=media&token=d488e71a-5ec1-4360-83b7-6b436f7251a4");
-                if(admin.equals("true"))
-                    regRef.child(phone.getText().toString()).child("Admin").setValue("true");
-                else
-                    regRef.child(phone.getText().toString()).child("Admin").setValue("false");
+                registerNow.setOnClickListener(v1 ->{
+                    if(!reg_otp.getText().toString().isEmpty()){
+                        if(reg_otp.getText().toString().equals(String.valueOf(n))) {
+                            regRef.child(phone.getText().toString()).child("Name").setValue(name.getText().toString());
+                            regRef.child(phone.getText().toString()).child("Email").setValue(email.getText().toString());
+                            regRef.child(phone.getText().toString()).child("Password").setValue(password.getText().toString());
+                            regRef.child(phone.getText().toString()).child("Address").setValue(address.getText().toString());
+                            regRef.child(phone.getText().toString()).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/images%2Finnova.png?alt=media&token=d488e71a-5ec1-4360-83b7-6b436f7251a4");
+                            if(admin.equals("true"))
+                                regRef.child(phone.getText().toString()).child("Admin").setValue("true");
+                            else
+                                regRef.child(phone.getText().toString()).child("Admin").setValue("false");
 
-                Navigation.findNavController(v).navigate(R.id.action_registration_to_login);
+                            Navigation.findNavController(v).navigate(R.id.action_registration_to_login);
+                        }else
+                            Toast.makeText(getContext(),"Please Enter Valid OTP",Toast.LENGTH_LONG).show();
+                    }
+                    else
+                        Toast.makeText(getContext(),"Please Enter OTP",Toast.LENGTH_LONG).show();
+                });
+
             }
         });
 
@@ -145,7 +158,7 @@ public class Registration extends Fragment {
             Toast.makeText(v.getContext(), "Registration Successfully", Toast.LENGTH_SHORT).show();
 
             Random rand = new Random();
-            int n = rand.nextInt(55320) + 1;
+            n = rand.nextInt(55320) + 1;
             String msg = "Please Enter "+ n+" as your OTP for Verification ->";
 
             new sendMail("Your OTP FOR Shiva Self Drive application ",
@@ -153,7 +166,7 @@ public class Registration extends Fragment {
                     email.getText().toString(),
                     this.getContext()).execute();
 
-            return reg_otp.getText().toString().equals(String.valueOf(n));
+            return true;
         }
         return false;
     }

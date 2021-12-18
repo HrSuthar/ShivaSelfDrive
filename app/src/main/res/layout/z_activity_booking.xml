@@ -594,6 +594,16 @@
                 android:textColor="@color/colorOnPrimary"
                 android:textSize="@dimen/_13sdp" />
 
+            <Button
+                android:id="@+id/confirmNowBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/teal_700"
+                android:padding="@dimen/_16sdp"
+                android:visibility="gone"
+                android:text="Confirm Now"
+                android:textColor="@color/colorOnPrimary"
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--        android:id="@+id/fab_manu_area"-->

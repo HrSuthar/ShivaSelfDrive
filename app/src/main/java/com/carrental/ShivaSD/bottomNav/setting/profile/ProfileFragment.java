@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
         profUserType.setText("User");
 
         fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
-                .navigate(R.id.action_navigation_home_to_navigation_car_add));
+                .navigate(R.id.action_profileFragment_to_manageProfileFragment));
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -65,7 +65,6 @@ public class ProfileFragment extends Fragment {
                         profContact.setText(datasnapshot.getKey());
                         if(datasnapshot.child("Admin").getValue(String.class).equals("true"))
                             profUserType.setText("Admin");
-
                     }
                 }
             }

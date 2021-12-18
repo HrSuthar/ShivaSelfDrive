@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
-public class EditProfileFragment extends Fragment {
-
+public class ManageProfileFragment extends Fragment {
     String userId;
     EditText phone, address;
     boolean isPhoneValid, isAddressValid;
@@ -69,7 +66,7 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        View root = inflater.inflate(R.layout.fragment_manage_profile, container, false);
 
         phone = root.findViewById(R.id.phone);
         address = root.findViewById(R.id.address);
@@ -104,37 +101,37 @@ public class EditProfileFragment extends Fragment {
     private void uploadToFirebase(){
         StorageReference fileRef = storageReference.child("Profiles").child(System.currentTimeMillis() + ".png");
         fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
-                fileRef.getDownloadUrl().addOnSuccessListener(uri ->
-                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri ->
+                                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                myRef.child(userId).child("Address").setValue(address.getText().toString());
+                                                myRef.child(userId).child("Address").setValue(address.getText().toString());
 //                                myRef.child("carmodels").child("").setValue(phone.getText().toString());
-                                myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
+                                                myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
 
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show();
-                            }
-                        })
-                )
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show();
+                                            }
+                                        })
+                        )
         ).addOnFailureListener(e ->
                 Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show());
     }
 
     public Boolean SetValidation(View v) {
-        if (phone.getText().toString().isEmpty()) {
-            phoneError.setError(getResources().getString(R.string.phone_error));
-            isPhoneValid = false;
-        }else if(!Patterns.PHONE.matcher(phone.getText().toString()).matches()) {
-            phoneError.setError(getResources().getString(R.string.error_invalid_phone));
-            isPhoneValid = false;
-        } else  {
-            isPhoneValid = true;
-            phoneError.setErrorEnabled(false);
-        }
+//        if (phone.getText().toString().isEmpty()) {
+//            phoneError.setError(getResources().getString(R.string.phone_error));
+//            isPhoneValid = false;
+//        }else if(!Patterns.PHONE.matcher(phone.getText().toString()).matches()) {
+//            phoneError.setError(getResources().getString(R.string.error_invalid_phone));
+//            isPhoneValid = false;
+//        } else  {
+//            isPhoneValid = true;
+//            phoneError.setErrorEnabled(false);
+//        }
 
         if (address.getText().toString().isEmpty()) {
             addressError.setError(getResources().getString(R.string.address_error));
@@ -143,7 +140,7 @@ public class EditProfileFragment extends Fragment {
             isAddressValid = true;
         }
 
-        if ( isPhoneValid && isAddressValid){
+        if (isAddressValid){
             Toast.makeText(v.getContext(), "Registration Successfully", Toast.LENGTH_SHORT).show();
             return  true;
         }

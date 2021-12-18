@@ -198,7 +198,6 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:clickable="true"
-        android:visibility="gone"
         android:contentDescription="Edit Profile"
         android:background="@color/teal_700"
         android:src="@drawable/ic_baseline_create_24"

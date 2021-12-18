@@ -50,6 +50,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BookingFragment extends Fragment {
 
+    int n;
     FrameLayout mWrapperFL;
     TextView bookingCar;
     private AutoCompleteTextView pickUpLocation, dropLocation;
@@ -63,7 +64,7 @@ public class BookingFragment extends Fragment {
     private DateBlock startDateBlock, endDateBlock;
     String userId;
     TextView dailyPrice,bookPrice, extraHour, tax, totalAmount;
-    EditText name, address, email, phone, otp;
+    EditText name, address, email, phone, reg_otp;
     String cName, cAddress, cEmail, cPhone, cPickDate,cPickTime, cDropDate, cDropTime, cPickupL, cDropL;
     String[] CustomerDetail, template;
 
@@ -118,7 +119,7 @@ public class BookingFragment extends Fragment {
         address = root.findViewById(R.id.customer_address);
         email = root.findViewById(R.id.customer_email);
         phone = root.findViewById(R.id.customer_phone);
-        otp = root.findViewById(R.id.otp);
+        reg_otp = root.findViewById(R.id.otp);
         cName = name.getText().toString();
         cAddress = address.getText().toString();
         cEmail = email.getText().toString();
@@ -188,6 +189,7 @@ public class BookingFragment extends Fragment {
         paymentGrp = root.findViewById(R.id.payment_option);
 
         Button confirmButton = root.findViewById(R.id.confirmBtn);
+        Button confirmNowButton = root.findViewById(R.id.confirmNowBtn);
 
         startDateBlock.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
@@ -236,27 +238,27 @@ public class BookingFragment extends Fragment {
                         .putExtra("Amount", totalAmount.getText().toString()));
             }
         });
+
         confirmButton.setOnClickListener(v -> {
-            otp.setVisibility(View.VISIBLE);
+            if(userId.equals("007")) {
+                reg_otp.setVisibility(View.VISIBLE);
+                confirmButton.setVisibility(View.GONE);
+                confirmNowButton.setVisibility(View.VISIBLE);
+            }
             Bundle bundle = reFetchData(carList);
             if(SetValidation(v)){
-                try {
-                    StringBuilder msg = new StringBuilder();
-                    for(int i=0; i<CustomerDetail.length; ++i)
-                        msg.append(template[i]).append("\t").append(CustomerDetail[i]).append("\n");
-
-                    new sendMail("Booking Confirm",
-                             String.valueOf(msg),
-                            "hrutviksuthar007@gmail.com",
-                            this.getContext()).execute();
-
-                    Navigation.findNavController(v)
-                            .navigate(R.id.action_navigation_booking_to_navigation_checkout, bundle);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(v,"Booking Failed! Please Try Again",Snackbar.LENGTH_LONG).show();
-                }
+                if(userId.equals("007")) {
+                    confirmNowButton.setOnClickListener(v1 -> {
+                        if (!reg_otp.getText().toString().isEmpty()) {
+                            if (reg_otp.getText().toString().equals(String.valueOf(n)))
+                                mailing(v,bundle);
+                            else
+                                Toast.makeText(getContext(), "Please Enter Valid OTP", Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getContext(), "Please Enter OTP", Toast.LENGTH_LONG).show();
+                    });
+                }else
+                    mailing(v,bundle);
             }
         });
 
@@ -328,6 +330,25 @@ public class BookingFragment extends Fragment {
         return bundle;
     }
 
+    public void mailing(View v, Bundle bundle){
+        try {
+            StringBuilder msg = new StringBuilder();
+            for (int i = 0; i < CustomerDetail.length; ++i)
+                msg.append(template[i]).append("\t").append(CustomerDetail[i]).append("\n");
+            //TODO change Mail
+            new sendMail("Booking Confirm",
+                    String.valueOf(msg),
+                    "hrutviksuthar007@gmail.com",
+                    this.getContext()).execute();
+
+            Navigation.findNavController(v)
+                    .navigate(R.id.action_navigation_booking_to_navigation_checkout, bundle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Snackbar.make(v, "Booking Failed! Please Try Again", Snackbar.LENGTH_LONG).show();
+        }
+    }
 
     public boolean SetValidation(View v) {
         // Check for a valid Pickup address.
@@ -381,7 +402,7 @@ public class BookingFragment extends Fragment {
 
             if(!userId.equals("007")) {
                 Random rand = new Random();
-                int n = rand.nextInt(55320) + 6;
+                n = rand.nextInt(55320) + 6;
                 String msg = "Please Enter " + n + " as your OTP for Verification ->";
 
                 new sendMail("Your OTP FOR Shiva Self Drive application ",
@@ -389,9 +410,8 @@ public class BookingFragment extends Fragment {
                         email.getText().toString(),
                         this.getContext()).execute();
 
-                return otp.getText().toString().equals(String.valueOf(n));
-            }else
-                return true;
+            }
+            return true;
         }
         return false;
     }

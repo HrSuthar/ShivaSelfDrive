@@ -134,13 +134,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:hint="@string/address"
-                    android:inputType="textPassword"
+                    android:inputType="textPostalAddress"
                     android:maxLines="1"
                     android:paddingStart="@dimen/_6sdp"
                     android:singleLine="true"
                     android:paddingLeft="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
-                    android:autofillHints="password"
+                    android:autofillHints="address"
                     android:paddingRight="@dimen/_6sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -167,6 +167,17 @@
                 android:layout_margin="20dp"
                 android:backgroundTint="@color/teal_200"
                 android:text="@string/register"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/register_now"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:visibility="gone"
+                android:backgroundTint="@color/teal_200"
+                android:text="REGISTER NOW"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"/>
 
