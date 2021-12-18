@@ -17,9 +17,11 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carrental.ShivaSD.R;
 
+import java.util.ArrayList;
+
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.eventViewHolder> {
-    private final String[][] mEventDesc;
+    private String[][] mEventDesc;
     RequestManager glide;
 
     public cardAdapter(RequestManager glide, String[][] mEventDesc){
@@ -70,6 +72,11 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.eventViewHolde
             textView = itemView.findViewById(R.id.car_category_name);
             cardView = itemView.findViewById(R.id.card_View);
         }
+    }
+
+    public  void filterList(ArrayList<String[]> filteredList){
+        mEventDesc = filteredList.toArray(new String[0][]);
+        notifyDataSetChanged();
     }
 
 }

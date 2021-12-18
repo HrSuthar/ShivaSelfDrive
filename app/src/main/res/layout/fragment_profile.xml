@@ -116,7 +116,7 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
+                                android:background="@drawable/circular_white_bordersolid"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_call_24dp" />
 
@@ -142,7 +142,7 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
+                                android:background="@drawable/circular_white_bordersolid"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_email_24dp" />
 
@@ -169,7 +169,7 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
+                                android:background="@drawable/circular_white_bordersolid"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_location_24dp" />
 

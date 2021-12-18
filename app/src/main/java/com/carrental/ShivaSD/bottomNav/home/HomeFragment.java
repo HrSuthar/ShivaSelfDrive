@@ -3,17 +3,18 @@ package com.carrental.ShivaSD.bottomNav.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -29,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -49,6 +52,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     Animation toBottom ;
     Boolean fabClicked = false;
     View root;
+    EditText searchCar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +68,21 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         floatingActionButton = root.findViewById(R.id.floating_action_button_car);
         fabAdd = root.findViewById(R.id.fab_add);
         fabRemove = root.findViewById(R.id.fab_remove);
+        searchCar = root.findViewById(R.id.searchCar);
+        searchCar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
 
         mSwipeRefreshLayout = root.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -173,5 +192,15 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void filter(String text){
+        ArrayList<String[]> filteredList = new ArrayList<>() ;
+        for(int i=0;i< carModels.length;i++){
+            if(carModels[i][0].toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(carModels[i]);
+            }
+        }
+        mAdapter.filterList(filteredList);
     }
 }
