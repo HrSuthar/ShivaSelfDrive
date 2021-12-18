@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:hint="@string/address"
-                    android:inputType="textPassword"
+                    android:inputType="textPostalAddress"
                     android:maxLines="1"
                     android:paddingStart="@dimen/_6sdp"
                     android:singleLine="true"
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:id="@+id/car_add_progress"/>
+                android:id="@+id/profile_add_progress"/>
 
 
         </LinearLayout>

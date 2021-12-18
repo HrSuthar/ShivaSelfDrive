@@ -70,7 +70,10 @@ public class ManageProfileFragment extends Fragment {
 
         phone = root.findViewById(R.id.phone);
         address = root.findViewById(R.id.address);
-        profileImage =  root.findViewById(R.id.add_image_url);
+        profileImage =  root.findViewById(R.id.add_profile_url);
+        updateBtn = root.findViewById(R.id.change_Btn);
+        cancelBtn = root.findViewById(R.id.cancel_btn);
+        progressBar = root.findViewById(R.id.profile_add_progress);
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         userId =  sharedPreferences.getString(KEY_USERID, "007");
 
@@ -141,7 +144,7 @@ public class ManageProfileFragment extends Fragment {
         }
 
         if (isAddressValid){
-            Toast.makeText(v.getContext(), "Registration Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Updated Successfully", Toast.LENGTH_SHORT).show();
             return  true;
         }
         return  false;

@@ -67,6 +67,8 @@ public class BookingFragment extends Fragment {
     EditText name, address, email, phone, reg_otp;
     String cName, cAddress, cEmail, cPhone, cPickDate,cPickTime, cDropDate, cDropTime, cPickupL, cDropL;
     String[] CustomerDetail, template;
+    String finalAmount;
+
 
     private static final String[] SURAT_AREAS = new String[] {
 
@@ -188,6 +190,7 @@ public class BookingFragment extends Fragment {
         payNow = root.findViewById(R.id.pay_later);
         paymentGrp = root.findViewById(R.id.payment_option);
 
+
         Button confirmButton = root.findViewById(R.id.confirmBtn);
         Button confirmNowButton = root.findViewById(R.id.confirmNowBtn);
 
@@ -212,22 +215,22 @@ public class BookingFragment extends Fragment {
         });
 
         endDateBlock.setOnClickListener(v -> {
-           DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
                 endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
-                                .format(calendar.getTime()), month, String.valueOf(year));
+                        .format(calendar.getTime()), month, String.valueOf(year));
                 new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
-                   Calendar datetime = Calendar.getInstance();
-                   Calendar c = Calendar.getInstance();
-                   datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                   datetime.set(Calendar.MINUTE, minute);
-                   if (datetime.getTimeInMillis() >= c.getTimeInMillis())
-                       endDateBlock.setTime(hourOfDay + ":" + minute);
-                   else
-                       Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
-               }, sHour,sMin,false).show();
+                    Calendar datetime = Calendar.getInstance();
+                    Calendar c = Calendar.getInstance();
+                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    datetime.set(Calendar.MINUTE, minute);
+                    if (datetime.getTimeInMillis() >= c.getTimeInMillis())
+                        endDateBlock.setTime(hourOfDay + ":" + minute);
+                    else
+                        Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
+                }, sHour,sMin,false).show();
             }, dYear, dMonth, dDay);
-           datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-           datePickerDialog.show();
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            datePickerDialog.show();
         });
 
 
@@ -267,11 +270,13 @@ public class BookingFragment extends Fragment {
 
     private void autoloadDate(){
         Date currDate = calendar.getTime();
+        Calendar h_cal = Calendar.getInstance();
+        h_cal.add(Calendar.HOUR_OF_DAY,1);
         startDateBlock.setDate(new SimpleDateFormat("d",Locale.US).format(currDate)
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
-        startDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(currDate) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
+        startDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
 
         Calendar t_cal = Calendar.getInstance();
         t_cal.add(Calendar.DATE,1); // tomorrow
@@ -279,7 +284,7 @@ public class BookingFragment extends Fragment {
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
-        endDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(currDate) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
+        endDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
 
     }
 
@@ -293,6 +298,7 @@ public class BookingFragment extends Fragment {
             cEmail = email.getText().toString();
             cPhone = phone.getText().toString();
         }
+
         cPickDate = startDateBlock.getDate();
         cPickTime = startDateBlock.getTime();
         cDropDate = endDateBlock.getDate();
@@ -308,8 +314,6 @@ public class BookingFragment extends Fragment {
         }catch (ParseException e){
             e.printStackTrace();
         }
-
-        String finalAmount;
         if(Diff >=1) finalAmount = String.valueOf(Diff * (p1+bp+tp));
         else finalAmount = String.valueOf(p1+bp+tp);
 
@@ -338,7 +342,7 @@ public class BookingFragment extends Fragment {
             //TODO change Mail
             new sendMail("Booking Confirm",
                     String.valueOf(msg),
-                    "hrutviksuthar007@gmail.com",
+                    "jadonmaheshpalsingh@gmail.com",
                     this.getContext()).execute();
 
             Navigation.findNavController(v)
@@ -398,16 +402,17 @@ public class BookingFragment extends Fragment {
         }
 
         if (isNameValid && isPhoneValid && isPickupAddressValid && isEmailValid && isAddressValid) {
-            Toast.makeText(v.getContext(), "Validation Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Validation Successfully"+userId, Toast.LENGTH_SHORT).show();
 
             if(!userId.equals("007")) {
+
                 Random rand = new Random();
                 n = rand.nextInt(55320) + 6;
                 String msg = "Please Enter " + n + " as your OTP for Verification ->";
 
                 new sendMail("Your OTP FOR Shiva Self Drive application ",
                         msg,
-                        email.getText().toString(),
+                        cEmail,
                         this.getContext()).execute();
 
             }

@@ -347,7 +347,9 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="end"
                                 android:textColor="@color/colorOnPrimary" />
+
                         </TableRow>
+
                     </TableLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
