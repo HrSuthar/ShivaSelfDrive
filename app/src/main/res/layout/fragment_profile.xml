@@ -40,11 +40,21 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <ProgressBar
+                        android:id="@+id/loading_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_gravity="center_horizontal"
+                        android:indeterminate="true" />
+
                     <ImageView
                         android:id="@+id/profile_image"
                         android:layout_width="@dimen/_200sdp"
                         android:layout_height="@dimen/_150sdp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitCenter"
+                        android:contentDescription="Profile Photo" />
+
 
                     <TextView
                         android:id="@+id/profile_name"
@@ -72,11 +82,6 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
                 app:cardElevation="@dimen/_15sdp"
                 app:cardCornerRadius="@dimen/_15sdp">
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/personalinfo"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
 
                 <!--Contact Details-->
                 <LinearLayout
@@ -194,7 +199,7 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:clickable="true"
@@ -203,6 +208,6 @@ tools:context=".bottomNav.setting.profile.ProfileFragment">
         android:src="@drawable/ic_baseline_create_24"
         android:focusable="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/_16sdp" />
+        android:layout_marginEnd="@dimen/_16sdp" />
 
 </RelativeLayout>

@@ -63,15 +63,15 @@ public class BookingFragment extends Fragment {
     double p1,bp,tp;
     private DateBlock startDateBlock, endDateBlock;
     String userId;
-    TextView dailyPrice,bookPrice, extraHour, tax, totalAmount;
-    EditText name, address, email, phone, reg_otp;
-    String cName, cAddress, cEmail, cPhone, cPickDate,cPickTime, cDropDate, cDropTime, cPickupL, cDropL;
+    TextView dailyPrice, bookPrice, extraHour, tax, totalAmount;
+    EditText name, address, email, phone, reg_otp, pass;
+    String cName, cAddress, cEmail, cPass, cPhone;
+    String cPickDate,cPickTime, cDropDate, cDropTime, cPickupL, cDropL;
     String[] CustomerDetail, template;
     String finalAmount;
 
 
     private static final String[] SURAT_AREAS = new String[] {
-
             "Piplod", "Athwalines", "Surat Dumas Road", "Ghod Dod Road", "City Light",
             "Vesu",  "Katargam", "Adajan",  "Althan", "Canal Road", "VIP Road", "Varachha",
             "Kharwar Nagar", "Rander Road", "Rander", "Navagam", "Hazira - Adajan Road",
@@ -93,7 +93,7 @@ public class BookingFragment extends Fragment {
 
     RadioButton payLater, payNow;
     RadioGroup paymentGrp;
-    boolean isNameValid, isEmailValid, isPhoneValid,isAddressValid,isPickupAddressValid;
+    boolean isNameValid, isEmailValid, isPhoneValid, isAddressValid, isPickupAddressValid, isPasswordValid;
     DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("USER");
 
     Calendar calendar = Calendar.getInstance();
@@ -122,6 +122,7 @@ public class BookingFragment extends Fragment {
         email = root.findViewById(R.id.customer_email);
         phone = root.findViewById(R.id.customer_phone);
         reg_otp = root.findViewById(R.id.otp);
+        pass = root.findViewById(R.id.customer_password);
         cName = name.getText().toString();
         cAddress = address.getText().toString();
         cEmail = email.getText().toString();
@@ -194,14 +195,21 @@ public class BookingFragment extends Fragment {
         Button confirmButton = root.findViewById(R.id.confirmBtn);
         Button confirmNowButton = root.findViewById(R.id.confirmNowBtn);
 
+        AtomicBoolean flagStartDatePressed = new AtomicBoolean(false);
+        AtomicBoolean flagEndDatePressed = new AtomicBoolean(false);
+
         startDateBlock.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                calendar.set(year,month,dayOfMonth);
+                flagStartDatePressed.set(true);
                 startDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                        .format(calendar.getTime()), month, String.valueOf(year));
+                endDateBlock.setDate(String.valueOf(dayOfMonth+1), new SimpleDateFormat("EEEE", Locale.US)
                         .format(calendar.getTime()), month, String.valueOf(year));
                 new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
                     Calendar datetime = Calendar.getInstance();
                     Calendar c = Calendar.getInstance();
-                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay -1);
+                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay +1);
                     datetime.set(Calendar.MINUTE, minute);
                     if (datetime.getTimeInMillis() >= c.getTimeInMillis())
                         startDateBlock.setTime(hourOfDay + ":" + minute);
@@ -210,27 +218,32 @@ public class BookingFragment extends Fragment {
                 }, sHour,sMin,false).show();
             }, sYear, sMonth, sDay);
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            if(flagEndDatePressed.get())
+                datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
             datePickerDialog.show();
 
         });
-
         endDateBlock.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
-                        .format(calendar.getTime()), month, String.valueOf(year));
-                new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
-                    Calendar datetime = Calendar.getInstance();
-                    Calendar c = Calendar.getInstance();
-                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    datetime.set(Calendar.MINUTE, minute);
-                    if (datetime.getTimeInMillis() >= c.getTimeInMillis())
-                        endDateBlock.setTime(hourOfDay + ":" + minute);
-                    else
-                        Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
-                }, sHour,sMin,false).show();
-            }, dYear, dMonth, dDay);
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePickerDialog.show();
+//            if(flagStartDatePressed.get()) {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                        flagEndDatePressed.set(true);
+                        calendar.set(year,month,dayOfMonth);
+                        endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                                .format(calendar.getTime()), month, String.valueOf(year));
+                        new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
+                            Calendar datetime = Calendar.getInstance();
+                            Calendar c = Calendar.getInstance();
+                            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            datetime.set(Calendar.MINUTE, minute);
+                            if (datetime.getTimeInMillis() >= c.getTimeInMillis())
+                                endDateBlock.setTime(hourOfDay + ":" + minute);
+                            else
+                                Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
+                        }, sHour, sMin, false).show();
+                    }, dYear, dMonth, dDay);
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                datePickerDialog.show();
+//            }else Toast.makeText(v.getContext(),"Please Enter Pickup Date First",Toast.LENGTH_LONG).show();
         });
 
 
@@ -253,8 +266,15 @@ public class BookingFragment extends Fragment {
                 if(userId.equals("007")) {
                     confirmNowButton.setOnClickListener(v1 -> {
                         if (!reg_otp.getText().toString().isEmpty()) {
-                            if (reg_otp.getText().toString().equals(String.valueOf(n)))
+                            if (reg_otp.getText().toString().equals(String.valueOf(n))){
+                                myRef.child(cPhone).child("Address").setValue(cAddress);
+                                myRef.child(cPhone).child("Admin").setValue("false");
+                                myRef.child(cPhone).child("Email").setValue(cEmail);
+                                myRef.child(cPhone).child("Password").setValue(cPass);
+                                myRef.child(cPhone).child("Name").setValue(cName);
+                                myRef.child(cPhone).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/Profiles%2Fdefaultprofile.jpeg?alt=media&token=4ef6fd1c-f0c6-4a74-b472-80ef1073e955");
                                 mailing(v,bundle);
+                            }
                             else
                                 Toast.makeText(getContext(), "Please Enter Valid OTP", Toast.LENGTH_LONG).show();
                         } else
@@ -272,7 +292,7 @@ public class BookingFragment extends Fragment {
         Date currDate = calendar.getTime();
         Calendar h_cal = Calendar.getInstance();
         h_cal.add(Calendar.HOUR_OF_DAY,1);
-        startDateBlock.setDate(new SimpleDateFormat("d",Locale.US).format(currDate)
+        startDateBlock.setDate(new SimpleDateFormat("dd",Locale.US).format(currDate)
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
@@ -280,7 +300,7 @@ public class BookingFragment extends Fragment {
 
         Calendar t_cal = Calendar.getInstance();
         t_cal.add(Calendar.DATE,1); // tomorrow
-        endDateBlock.setDate(new SimpleDateFormat("d",Locale.US).format(t_cal.getTime())
+        endDateBlock.setDate(new SimpleDateFormat("dd",Locale.US).format(t_cal.getTime())
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
@@ -297,6 +317,7 @@ public class BookingFragment extends Fragment {
             cAddress = address.getText().toString();
             cEmail = email.getText().toString();
             cPhone = phone.getText().toString();
+            cPass = pass.getText().toString();
         }
 
         cPickDate = startDateBlock.getDate();
@@ -339,7 +360,7 @@ public class BookingFragment extends Fragment {
             StringBuilder msg = new StringBuilder();
             for (int i = 0; i < CustomerDetail.length; ++i)
                 msg.append(template[i]).append("\t").append(CustomerDetail[i]).append("\n");
-            //TODO change Mail
+
             new sendMail("Booking Confirm",
                     String.valueOf(msg),
                     "jadonmaheshpalsingh@gmail.com",
@@ -390,6 +411,19 @@ public class BookingFragment extends Fragment {
             isEmailValid = true;
         }
 
+        if(userId.equals("007")){
+            if (cPass.isEmpty()) {
+                pass.setError(getResources().getString(R.string.password_error));
+                isPasswordValid = false;
+            } else if (cPass.length() < 6) {
+                pass.setError(getResources().getString(R.string.error_invalid_password));
+                isPasswordValid = false;
+            } else  {
+                isPasswordValid = true;
+    //            pass.setError(false);
+            }
+        }
+
         // Check for a valid phone number.
         if (cPhone.isEmpty()) {
             phone.setError(getResources().getString(R.string.phone_error));
@@ -404,7 +438,7 @@ public class BookingFragment extends Fragment {
         if (isNameValid && isPhoneValid && isPickupAddressValid && isEmailValid && isAddressValid) {
             Toast.makeText(v.getContext(), "Validation Successfully"+userId, Toast.LENGTH_SHORT).show();
 
-            if(!userId.equals("007")) {
+            if(userId.equals("007") && isPasswordValid) {
 
                 Random rand = new Random();
                 n = rand.nextInt(55320) + 6;

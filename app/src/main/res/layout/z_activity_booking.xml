@@ -481,6 +481,39 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
+                                    android:text="Password:"
+                                    android:textColor="@color/colorOnPrimary" />
+
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:passwordToggleEnabled="true">
+
+                                    <EditText
+                                        android:id="@+id/customer_password"
+                                        android:layout_width="172dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="end"
+                                        android:autofillHints="password"
+                                        android:hint="Must contain 7 char"
+                                        android:inputType="textPassword"
+                                        android:textColor="@color/colorOnPrimary"
+                                        android:textSize="@dimen/_13sdp" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:paddingTop="@dimen/_8sdp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
                                     android:text="Contact No:"
                                     android:textColor="@color/colorOnPrimary" />
 

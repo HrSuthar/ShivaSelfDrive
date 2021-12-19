@@ -20,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.carrental.ShivaSD.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -35,11 +38,12 @@ import com.google.firebase.storage.StorageReference;
 
 public class ManageProfileFragment extends Fragment {
     String userId;
-    EditText phone, address;
-    boolean isPhoneValid, isAddressValid;
-    TextInputLayout phoneError, addressError;
-    Button profileImage, cancelBtn, updateBtn;
+    EditText phone, address, password;
+    boolean isPasswordValid, isAddressValid;
+    TextInputLayout passError, addressError;
+    Button profileImageBtn, cancelBtn, updateBtn;
     ProgressBar progressBar;
+    TextView headerManage;
     ActivityResultLauncher<Intent> someActivityResultLauncher;
     Uri imageUri;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("USER");
@@ -47,6 +51,10 @@ public class ManageProfileFragment extends Fragment {
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "myPref";
     private static final String KEY_USERID = "phone";
+    String strPassword, strAddress, strURL;
+    boolean updatebtnPressed = false;
+    ImageView profilePhoto;
+    ProgressBar loadingProfile;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,16 +76,23 @@ public class ManageProfileFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_manage_profile, container, false);
 
-        phone = root.findViewById(R.id.phone);
         address = root.findViewById(R.id.address);
-        profileImage =  root.findViewById(R.id.add_profile_url);
+        loadingProfile = root.findViewById(R.id.loading_profile);
+        loadingProfile.setVisibility(View.VISIBLE);
+        password = root.findViewById(R.id.password);
+        profilePhoto = root.findViewById(R.id.profile_image);
+        headerManage = root.findViewById(R.id.update_Profile_textView);
+        profileImageBtn =  root.findViewById(R.id.add_profile_url);
         updateBtn = root.findViewById(R.id.change_Btn);
         cancelBtn = root.findViewById(R.id.cancel_btn);
         progressBar = root.findViewById(R.id.profile_add_progress);
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         userId =  sharedPreferences.getString(KEY_USERID, "007");
+        fetchFromFirebase(root);
 
-        profileImage.setOnClickListener(v -> {
+
+        profileImageBtn.setOnClickListener(v -> {
+            updatebtnPressed = true;
             Intent galleryIntent = new Intent();
             galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
             galleryIntent.setType("image/*");
@@ -87,7 +102,7 @@ public class ManageProfileFragment extends Fragment {
         updateBtn.setOnClickListener(v -> {
             if(SetValidation(v)){
                 progressBar.setVisibility(View.VISIBLE);
-                uploadToFirebase();
+                updateToFirebase();
                 new Handler().postDelayed(() -> {
                     progressBar.setVisibility(View.GONE);
                     Navigation.findNavController(v).popBackStack(R.id.navigation_home,false);
@@ -97,44 +112,56 @@ public class ManageProfileFragment extends Fragment {
 
         cancelBtn.setOnClickListener(v -> requireActivity().onBackPressed());
 
-
         return root;
     }
 
-    private void uploadToFirebase(){
+    private void fetchFromFirebase(View root){
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                strAddress = snapshot.child(userId).child("Address").getValue(String.class);
+                strPassword = snapshot.child(userId).child("Password").getValue(String.class);
+                strURL = snapshot.child(userId).child("ProfilePhoto").getValue(String.class);
+                loadingProfile.setVisibility(View.GONE);
+                Glide.with(root).load(strURL).into(profilePhoto);
+                headerManage.setText("Update Profile");
+                address.setText(strAddress);
+                password.setText(strPassword);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(),"Fetch Failed!!",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateToFirebase(){
         StorageReference fileRef = storageReference.child("Profiles").child(System.currentTimeMillis() + ".png");
         fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
-                        fileRef.getDownloadUrl().addOnSuccessListener(uri ->
-                                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                                myRef.child(userId).child("Address").setValue(address.getText().toString());
-//                                myRef.child("carmodels").child("").setValue(phone.getText().toString());
-                                                myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
-
-                                            }
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show();
-                                            }
-                                        })
-                        )
+            fileRef.getDownloadUrl().addOnSuccessListener(uri ->{
+                myRef.child(userId).child("Address").setValue(address.getText().toString());
+                myRef.child(userId).child("Password").setValue(password.getText().toString());
+                if(updatebtnPressed)
+                    myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
+                else
+                    myRef.child(userId).child("ProfilePhoto").setValue(strURL);
+            })
         ).addOnFailureListener(e ->
                 Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show());
     }
 
     public Boolean SetValidation(View v) {
-//        if (phone.getText().toString().isEmpty()) {
-//            phoneError.setError(getResources().getString(R.string.phone_error));
-//            isPhoneValid = false;
-//        }else if(!Patterns.PHONE.matcher(phone.getText().toString()).matches()) {
-//            phoneError.setError(getResources().getString(R.string.error_invalid_phone));
-//            isPhoneValid = false;
-//        } else  {
-//            isPhoneValid = true;
-//            phoneError.setErrorEnabled(false);
-//        }
+
+        if (password.getText().toString().isEmpty()) {
+            passError.setError(getResources().getString(R.string.password_error));
+            isPasswordValid = false;
+        } else if (password.getText().length() < 6) {
+            passError.setError(getResources().getString(R.string.error_invalid_password));
+            isPasswordValid = false;
+        } else  {
+            isPasswordValid = true;
+            passError.setErrorEnabled(false);
+        }
 
         if (address.getText().toString().isEmpty()) {
             addressError.setError(getResources().getString(R.string.address_error));
@@ -144,7 +171,7 @@ public class ManageProfileFragment extends Fragment {
         }
 
         if (isAddressValid){
-            Toast.makeText(v.getContext(), "Updated Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Validate Successfully", Toast.LENGTH_SHORT).show();
             return  true;
         }
         return  false;

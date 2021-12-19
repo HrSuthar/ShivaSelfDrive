@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileFragment extends Fragment {
 
     ImageView profImg;
+    ProgressBar loadingProfile;
     FloatingActionButton fabAdd;
     TextView profName, profContact, profEmail, profAddress, profUserType;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("USER");
@@ -49,6 +51,8 @@ public class ProfileFragment extends Fragment {
         fabAdd = root.findViewById(R.id.fab_add);
         profUserType =  root.findViewById(R.id.profile_userType);
         profUserType.setText("User");
+        loadingProfile = root.findViewById(R.id.loading_profile);
+        loadingProfile.setVisibility(View.VISIBLE);
 
         fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
                 .navigate(R.id.action_profileFragment_to_manageProfileFragment));
@@ -58,6 +62,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot datasnapshot: snapshot.getChildren()){
                     if(String.valueOf(datasnapshot.getKey()).equals(userID)){
+                        loadingProfile.setVisibility(View.GONE);
                         Glide.with(root).load(datasnapshot.child("ProfilePhoto").getValue(String.class)).into(profImg);
                         profAddress.setText(datasnapshot.child("Address").getValue(String.class));
                         profName.setText(datasnapshot.child("Name").getValue(String.class));
