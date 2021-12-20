@@ -1,11 +1,11 @@
 package com.carrental.ShivaSD.bottomNav.home.cars;
 
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +42,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BookingFragment extends Fragment {
+public class BookingFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
 
     int n;
     FrameLayout mWrapperFL;
@@ -70,7 +74,6 @@ public class BookingFragment extends Fragment {
     String[] CustomerDetail, template;
     String finalAmount;
 
-
     private static final String[] SURAT_AREAS = new String[] {
             "Piplod", "Athwalines", "Surat Dumas Road", "Ghod Dod Road", "City Light",
             "Vesu",  "Katargam", "Adajan",  "Althan", "Canal Road", "VIP Road", "Varachha",
@@ -90,12 +93,16 @@ public class BookingFragment extends Fragment {
             "New City Light Road", "Ichchhapor", "Ambanagar", "Masma", "Mosali"
     };
 
+    Boolean flagStartDatePressed = Boolean.FALSE;
+    Boolean flagEndDatePressed = Boolean.FALSE;
 
     RadioButton payLater, payNow;
     RadioGroup paymentGrp;
     boolean isNameValid, isEmailValid, isPhoneValid, isAddressValid, isPickupAddressValid, isPasswordValid;
     DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("USER");
-
+    DatabaseReference refDateBlock= FirebaseDatabase.getInstance().getReference("HISTORY");
+    SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy",Locale.US);
+    Calendar[] disabledDays1;
     Calendar calendar = Calendar.getInstance();
     int sDay = calendar.get(Calendar.DAY_OF_MONTH);
     int sMonth = calendar.get(Calendar.MONTH);
@@ -115,6 +122,39 @@ public class BookingFragment extends Fragment {
 
         assert getArguments() != null;
         String[] carList = getArguments().getStringArray("BookingCar");
+
+        List<Calendar> datesWillBlock = new ArrayList<>();
+
+        refDateBlock.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshots: snapshot.getChildren()){
+                    for(DataSnapshot dataSnapshot: dataSnapshots.getChildren()){
+                        if(String.valueOf(dataSnapshot.getKey()).equals(carList[6])){
+                            try {
+                                Date date1 = format.parse(dataSnapshot.child("DepartDate").getValue(String.class));
+                                Date date2 = format.parse(dataSnapshot.child("ReturnDate").getValue(String.class));
+                                if(date1.getTime() > Calendar.getInstance().getTimeInMillis() ||  date2.getTime() > Calendar.getInstance().getTimeInMillis()) {
+                                    long Diff = (date2.getTime() - date1.getTime()) / (24 * 60 * 60 * 1000);
+                                    for (long i = 0; i <= Diff; i++) {
+                                        Calendar cal = Calendar.getInstance();
+                                        cal.setTime(new Date(date1.getTime() + (i * (1000 * 60 * 60 * 24))));
+                                        datesWillBlock.add(cal);
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                disabledDays1 = datesWillBlock.toArray(new Calendar[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         cardViewCustomerDetails = root.findViewById(R.id.customer_card_details);
         name =  root.findViewById(R.id.customer_name);
@@ -195,55 +235,25 @@ public class BookingFragment extends Fragment {
         Button confirmButton = root.findViewById(R.id.confirmBtn);
         Button confirmNowButton = root.findViewById(R.id.confirmNowBtn);
 
-        AtomicBoolean flagStartDatePressed = new AtomicBoolean(false);
-        AtomicBoolean flagEndDatePressed = new AtomicBoolean(false);
 
         startDateBlock.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                calendar.set(year,month,dayOfMonth);
-                flagStartDatePressed.set(true);
-                startDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
-                        .format(calendar.getTime()), month, String.valueOf(year));
-                endDateBlock.setDate(String.valueOf(dayOfMonth+1), new SimpleDateFormat("EEEE", Locale.US)
-                        .format(calendar.getTime()), month, String.valueOf(year));
-                new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
-                    Calendar datetime = Calendar.getInstance();
-                    Calendar c = Calendar.getInstance();
-                    datetime.set(Calendar.HOUR_OF_DAY, hourOfDay +1);
-                    datetime.set(Calendar.MINUTE, minute);
-                    if (datetime.getTimeInMillis() >= c.getTimeInMillis())
-                        startDateBlock.setTime(hourOfDay + ":" + minute);
-                    else
-                        Toast.makeText(getContext(), "Atleast 1 hours Time Difference Require", Toast.LENGTH_LONG).show();
-                }, sHour,sMin,false).show();
-            }, sYear, sMonth, sDay);
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            if(flagEndDatePressed.get())
-                datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
-            datePickerDialog.show();
-
+            flagStartDatePressed = true;
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, sYear, sMonth, sDay);
+            datePickerDialog.setMinDate(Calendar.getInstance());
+            if(flagEndDatePressed)
+                datePickerDialog.setMaxDate(calendar);
+            datePickerDialog.setThemeDark(true);
+            datePickerDialog.setDisabledDays(disabledDays1);
+            datePickerDialog.show(getChildFragmentManager(), "StartDatePickerDialog");
         });
+
         endDateBlock.setOnClickListener(v -> {
-//            if(flagStartDatePressed.get()) {
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-                        flagEndDatePressed.set(true);
-                        calendar.set(year,month,dayOfMonth);
-                        endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
-                                .format(calendar.getTime()), month, String.valueOf(year));
-                        new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
-                            Calendar datetime = Calendar.getInstance();
-                            Calendar c = Calendar.getInstance();
-                            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            datetime.set(Calendar.MINUTE, minute);
-                            if (datetime.getTimeInMillis() >= c.getTimeInMillis())
-                                endDateBlock.setTime(hourOfDay + ":" + minute);
-                            else
-                                Toast.makeText(getContext(), "Invalid Time", Toast.LENGTH_LONG).show();
-                        }, sHour, sMin, false).show();
-                    }, dYear, dMonth, dDay);
-                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-                datePickerDialog.show();
-//            }else Toast.makeText(v.getContext(),"Please Enter Pickup Date First",Toast.LENGTH_LONG).show();
+            flagEndDatePressed = true;
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, dYear, dMonth, dDay);
+            datePickerDialog.setMinDate(calendar);
+            datePickerDialog.setThemeDark(true);
+            datePickerDialog.setDisabledDays(disabledDays1);
+            datePickerDialog.show(getChildFragmentManager(), "EndDatePickerDialog");
         });
 
 
@@ -288,6 +298,44 @@ public class BookingFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        calendar.set(year,monthOfYear,dayOfMonth);
+        boolean Sdate = false;
+        if(flagStartDatePressed) {
+            startDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                    .format(calendar.getTime()), monthOfYear, String.valueOf(year));
+            endDateBlock.setDate(String.valueOf(dayOfMonth + 1), new SimpleDateFormat("EEEE", Locale.US)
+                    .format(calendar.getTime()), monthOfYear, String.valueOf(year));
+            flagStartDatePressed = false;
+            Sdate = true;
+        }
+        if(flagEndDatePressed){
+            endDateBlock.setDate(String.valueOf(dayOfMonth), new SimpleDateFormat("EEEE", Locale.US)
+                    .format(calendar.getTime()), monthOfYear, String.valueOf(year));
+            flagEndDatePressed = false;
+        }
+        AtomicBoolean finalSdate = new AtomicBoolean(Sdate);
+        new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
+            Calendar datetime = Calendar.getInstance();
+            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay-1);
+            datetime.set(Calendar.MINUTE, minute);
+            if (datetime.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
+                if(finalSdate.get()) {
+                    startDateBlock.setTime(hourOfDay + ":" + minute);
+                    finalSdate.set(false);
+
+                }else endDateBlock.setTime(hourOfDay + ":" + minute);
+            }
+            else
+                if(finalSdate.get()) {
+                    Toast.makeText(getContext(), "Minimum 1 Hours Advance Booking Allowed ", Toast.LENGTH_LONG).show();
+                    finalSdate.set(false);
+                }
+        }, sHour,sMin,false).show();
+    }
+
+
     private void autoloadDate(){
         Date currDate = calendar.getTime();
         Calendar h_cal = Calendar.getInstance();
@@ -325,13 +373,12 @@ public class BookingFragment extends Fragment {
         cDropDate = endDateBlock.getDate();
         cDropTime = endDateBlock.getTime();
         long Diff = 0;
-        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy",Locale.US);
         try {
             Date date1 = format.parse(cPickDate);
             Date date2 = format.parse(cDropDate);
             assert date2 != null;
             assert date1 != null;
-            Diff = date2.getTime() - date1.getTime();
+            Diff = (date2.getTime() - date1.getTime())/ (24 * 60 * 60 * 1000);
         }catch (ParseException e){
             e.printStackTrace();
         }
