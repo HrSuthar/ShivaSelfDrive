@@ -81,7 +81,7 @@ public class Registration extends Fragment {
                                 regRef.child(phone.getText().toString()).child("Admin").setValue("true");
                             else
                                 regRef.child(phone.getText().toString()).child("Admin").setValue("false");
-
+                            Toast.makeText(getContext(),"Registration Successful",Toast.LENGTH_LONG).show();
                             Navigation.findNavController(v).navigate(R.id.action_registration_to_login);
                         }else
                             Toast.makeText(getContext(),"Please Enter Valid OTP",Toast.LENGTH_LONG).show();

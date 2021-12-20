@@ -60,13 +60,13 @@ public class ManageProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        assert data != null;
-                        imageUri = data.getData();
-                    }
-                });
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    assert data != null;
+                    imageUri = data.getData();
+                }
+            });
     }
 
 
@@ -122,8 +122,8 @@ public class ManageProfileFragment extends Fragment {
                 strAddress = snapshot.child(userId).child("Address").getValue(String.class);
                 strPassword = snapshot.child(userId).child("Password").getValue(String.class);
                 strURL = snapshot.child(userId).child("ProfilePhoto").getValue(String.class);
-                loadingProfile.setVisibility(View.GONE);
                 Glide.with(root).load(strURL).into(profilePhoto);
+                loadingProfile.setVisibility(View.GONE);
                 headerManage.setText("Update Profile");
                 address.setText(strAddress);
                 password.setText(strPassword);
@@ -136,18 +136,22 @@ public class ManageProfileFragment extends Fragment {
     }
 
     private void updateToFirebase(){
-        StorageReference fileRef = storageReference.child("Profiles").child(System.currentTimeMillis() + ".png");
-        fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
-            fileRef.getDownloadUrl().addOnSuccessListener(uri ->{
-                myRef.child(userId).child("Address").setValue(address.getText().toString());
-                myRef.child(userId).child("Password").setValue(password.getText().toString());
-                if(updatebtnPressed)
-                    myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
-                else
-                    myRef.child(userId).child("ProfilePhoto").setValue(strURL);
-            })
-        ).addOnFailureListener(e ->
-                Toast.makeText(getContext(),"Upload Failed!!",Toast.LENGTH_LONG).show());
+
+        myRef.child(userId).child("Address").setValue(address.getText().toString());
+        myRef.child(userId).child("Password").setValue(password.getText().toString());
+        myRef.child(userId).child("ProfilePhoto").setValue(strURL);
+
+        if(updatebtnPressed) {
+            StorageReference fileRef = storageReference.child("Profiles").child(System.currentTimeMillis() + ".png");
+            fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
+                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        myRef.child(userId).child("ProfilePhoto").setValue(uri.toString());
+                        Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_LONG).show();
+                    })
+            ).addOnFailureListener(e ->
+                    Toast.makeText(getContext(), "Photo Upload Failed!!", Toast.LENGTH_LONG).show());
+        }else
+            Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_LONG).show();
     }
 
     public Boolean SetValidation(View v) {
@@ -160,7 +164,6 @@ public class ManageProfileFragment extends Fragment {
             isPasswordValid = false;
         } else  {
             isPasswordValid = true;
-            passError.setErrorEnabled(false);
         }
 
         if (address.getText().toString().isEmpty()) {

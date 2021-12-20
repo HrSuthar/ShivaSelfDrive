@@ -57,13 +57,13 @@ public class ProfileFragment extends Fragment {
         fabAdd.setOnClickListener(v -> Navigation.findNavController(v)
                 .navigate(R.id.action_profileFragment_to_manageProfileFragment));
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot datasnapshot: snapshot.getChildren()){
                     if(String.valueOf(datasnapshot.getKey()).equals(userID)){
-                        loadingProfile.setVisibility(View.GONE);
                         Glide.with(root).load(datasnapshot.child("ProfilePhoto").getValue(String.class)).into(profImg);
+                        loadingProfile.setVisibility(View.GONE);
                         profAddress.setText(datasnapshot.child("Address").getValue(String.class));
                         profName.setText(datasnapshot.child("Name").getValue(String.class));
                         profEmail.setText(datasnapshot.child("Email").getValue(String.class));

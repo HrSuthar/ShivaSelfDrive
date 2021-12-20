@@ -41,6 +41,7 @@
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_150sdp"
+                android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
                 android:contentDescription="Profile Photo" />
 
