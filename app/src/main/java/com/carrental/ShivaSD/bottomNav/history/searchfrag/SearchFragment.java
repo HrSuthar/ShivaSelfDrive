@@ -2,7 +2,6 @@ package com.carrental.ShivaSD.bottomNav.history.searchfrag;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,9 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.carrental.ShivaSD.R;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -120,43 +116,41 @@ public class SearchFragment extends BottomSheetDialogFragment {
 
             String RCNo = histDetails.get(position)[7];
             String Phone = histDetails.get(position)[9];
+            String Bookdate = histDetails.get(position)[5];
 
             DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("HISTORY");
-            final String[] status = new String[1];
+
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    status[0] = snapshot.child(Phone).child(RCNo).child("Status").getValue(String.class);
+                    String status = snapshot.child(Phone).child(RCNo).child("Status").getValue(String.class);
+                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+                    try {
+                        Date date = formatter.parse(Bookdate);
+                        Calendar calender = Calendar.getInstance();
+                        assert date != null;
+                        calender.setTime(date);
+                        long msDiff = Calendar.getInstance().getTimeInMillis() - calender.getTimeInMillis();
+                        long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
+                        if(daysDiff<=0 && status!=null) {
+                                if(status.equals("Success")) {
+                                    holder.cancelBook.setVisibility(View.VISIBLE);
+                                    holder.cancelBook.setOnClickListener(v -> {
+                                        myRef.child(Phone).child(RCNo).child("Status").setValue("Cancelled");
+                                        Toast.makeText(v.getContext(), "Booking Cancelled SuccessFul", Toast.LENGTH_LONG).show();
+                                        SearchFragment.this.dismiss();
+                                    });
+                                }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
-
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
-            try {
-               Date date = formatter.parse(histDetails.get(position)[5]);
-                Calendar calender = Calendar.getInstance();
-                assert date != null;
-                calender.setTime(date);
-                long msDiff = Calendar.getInstance().getTimeInMillis() - calender.getTimeInMillis();
-                long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
-                if(daysDiff<=0) {
-                    new Handler().postDelayed(() -> {
-                        if(status[0].equals("Success")) {
-                            holder.cancelBook.setVisibility(View.VISIBLE);
-                            holder.cancelBook.setOnClickListener(v -> {
-                                myRef.child(Phone).child(RCNo).child("Status").setValue("Cancelled");
-                                Toast.makeText(v.getContext(), "Booking Cancelled SuccessFul", Toast.LENGTH_LONG).show();
-                                SearchFragment.this.dismiss();
-                            });
-                        }
-                    }, 1000);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
 
         }
 

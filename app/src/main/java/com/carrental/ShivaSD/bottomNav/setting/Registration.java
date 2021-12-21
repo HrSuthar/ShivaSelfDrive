@@ -65,10 +65,10 @@ public class Registration extends Fragment {
         } else whichUser.setText("User");
 
         register.setOnClickListener(v -> {
-            reg_otp.setVisibility(View.VISIBLE);
-            register.setVisibility(View.GONE);
-            registerNow.setVisibility(View.VISIBLE);
             if(SetValidation(v)){
+                reg_otp.setVisibility(View.VISIBLE);
+                register.setVisibility(View.GONE);
+                registerNow.setVisibility(View.VISIBLE);
                 registerNow.setOnClickListener(v1 ->{
                     if(!reg_otp.getText().toString().isEmpty()){
                         if(reg_otp.getText().toString().equals(String.valueOf(n))) {
@@ -76,7 +76,7 @@ public class Registration extends Fragment {
                             regRef.child(phone.getText().toString()).child("Email").setValue(email.getText().toString());
                             regRef.child(phone.getText().toString()).child("Password").setValue(password.getText().toString());
                             regRef.child(phone.getText().toString()).child("Address").setValue(address.getText().toString());
-                            regRef.child(phone.getText().toString()).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/images%2Finnova.png?alt=media&token=d488e71a-5ec1-4360-83b7-6b436f7251a4");
+                            regRef.child(phone.getText().toString()).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/Profiles%2Fdefaultprofile.jpeg?alt=media&token=4ef6fd1c-f0c6-4a74-b472-80ef1073e955");
                             if(admin.equals("true"))
                                 regRef.child(phone.getText().toString()).child("Admin").setValue("true");
                             else

@@ -130,7 +130,8 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshots: snapshot.getChildren()){
                     for(DataSnapshot dataSnapshot: dataSnapshots.getChildren()){
-                        if(String.valueOf(dataSnapshot.getKey()).equals(carList[6])){
+                        if(String.valueOf(dataSnapshot.getKey()).equals(carList[6])
+                                && dataSnapshot.child("Status").getValue(String.class).equals("Success")){
                             try {
                                 Date date1 = format.parse(dataSnapshot.child("DepartDate").getValue(String.class));
                                 Date date2 = format.parse(dataSnapshot.child("ReturnDate").getValue(String.class));
