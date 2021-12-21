@@ -286,13 +286,10 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
                                 myRef.child(cPhone).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/Profiles%2Fdefaultprofile.jpeg?alt=media&token=4ef6fd1c-f0c6-4a74-b472-80ef1073e955");
                                 mailing(v,bundle);
                             }
-                            else
-                                Toast.makeText(getContext(), "Please Enter Valid OTP", Toast.LENGTH_LONG).show();
-                        } else
-                            Toast.makeText(getContext(), "Please Enter OTP", Toast.LENGTH_LONG).show();
+                            else Toast.makeText(getContext(), "Please Enter Valid OTP", Toast.LENGTH_LONG).show();
+                        } else Toast.makeText(getContext(), "Please Enter OTP", Toast.LENGTH_LONG).show();
                     });
-                }else
-                    mailing(v,bundle);
+                }else mailing(v,bundle);
             }
         });
 
@@ -328,14 +325,14 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
                 if(finalSdate.get()) {
                     startDateBlock.setTime(hourOfDay + ":" + minute);
                     finalSdate.set(false);
-
                 }else endDateBlock.setTime(hourOfDay + ":" + minute);
             }
-            else
-                if(finalSdate.get()) {
+            else {
+                if (finalSdate.get()) {
                     Toast.makeText(getContext(), "Minimum 1 Hours Advance Booking Allowed ", Toast.LENGTH_LONG).show();
                     finalSdate.set(false);
                 }
+            }
         }, sHour,sMin,false).show();
     }
 
@@ -348,7 +345,8 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
-        startDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
+        startDateBlock.setTime(new SimpleDateFormat("hh",Locale.US)
+                .format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
 
         Calendar t_cal = Calendar.getInstance();
         t_cal.add(Calendar.DATE,1); // tomorrow
@@ -356,8 +354,8 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
                 , new SimpleDateFormat("EEEE",Locale.US).format(currDate),
                 Integer.parseInt(new SimpleDateFormat("MM", Locale.US).format(currDate)) -1
                 , new SimpleDateFormat("yyyy",Locale.US).format(currDate));
-        endDateBlock.setTime(new SimpleDateFormat("hh",Locale.US).format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
-
+        endDateBlock.setTime(new SimpleDateFormat("hh",Locale.US)
+                .format(h_cal.getTime()) + ":"+ new SimpleDateFormat("mm",Locale.US).format(currDate));
     }
 
     private Bundle reFetchData(String[] carList) {
@@ -490,7 +488,6 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
             Toast.makeText(v.getContext(), "Validation Successfully"+userId, Toast.LENGTH_SHORT).show();
 
             if(userId.equals("007") && isPasswordValid) {
-
                 Random rand = new Random();
                 n = rand.nextInt(55320) + 6;
                 String msg = "Please Enter " + n + " as your OTP for Verification ->";
@@ -499,7 +496,6 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
                         msg,
                         cEmail,
                         this.getContext()).execute();
-
             }
             return true;
         }

@@ -77,17 +77,15 @@ public class Registration extends Fragment {
                             regRef.child(phone.getText().toString()).child("Password").setValue(password.getText().toString());
                             regRef.child(phone.getText().toString()).child("Address").setValue(address.getText().toString());
                             regRef.child(phone.getText().toString()).child("ProfilePhoto").setValue("https://firebasestorage.googleapis.com/v0/b/shivatours-4b4b0.appspot.com/o/Profiles%2Fdefaultprofile.jpeg?alt=media&token=4ef6fd1c-f0c6-4a74-b472-80ef1073e955");
-                            if(admin.equals("true"))
-                                regRef.child(phone.getText().toString()).child("Admin").setValue("true");
-                            else
-                                regRef.child(phone.getText().toString()).child("Admin").setValue("false");
+
+                            if(admin.equals("true")) regRef.child(phone.getText().toString()).child("Admin").setValue("true");
+                            else regRef.child(phone.getText().toString()).child("Admin").setValue("false");
+
                             Toast.makeText(getContext(),"Registration Successful",Toast.LENGTH_LONG).show();
                             Navigation.findNavController(v).navigate(R.id.action_registration_to_login);
-                        }else
-                            Toast.makeText(getContext(),"Please Enter Valid OTP",Toast.LENGTH_LONG).show();
+                        }else Toast.makeText(getContext(),"Please Enter Valid OTP",Toast.LENGTH_LONG).show();
                     }
-                    else
-                        Toast.makeText(getContext(),"Please Enter OTP",Toast.LENGTH_LONG).show();
+                    else Toast.makeText(getContext(),"Please Enter OTP",Toast.LENGTH_LONG).show();
                 });
 
             }
