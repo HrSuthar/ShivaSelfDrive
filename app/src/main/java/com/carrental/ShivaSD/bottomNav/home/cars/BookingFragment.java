@@ -318,7 +318,10 @@ public class BookingFragment extends Fragment implements DatePickerDialog.OnDate
         AtomicBoolean finalSdate = new AtomicBoolean(Sdate);
         new TimePickerDialog(getContext(), (view1, hourOfDay, minute) ->{
             Calendar datetime = Calendar.getInstance();
-            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay-1);
+            datetime.set(Calendar.YEAR, year);
+            datetime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            datetime.set(Calendar.MONTH, monthOfYear);
+            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay - 1);
             datetime.set(Calendar.MINUTE, minute);
             if (datetime.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
                 if(finalSdate.get()) {
