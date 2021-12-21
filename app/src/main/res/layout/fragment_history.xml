@@ -69,6 +69,7 @@
                     <com.carrental.ShivaSD.ui.customview.DateBlock
                         android:id="@+id/pick_up_date"
                         android:layout_width="match_parent"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
 
                     </com.carrental.ShivaSD.ui.customview.DateBlock>
@@ -83,6 +84,7 @@
                     <com.carrental.ShivaSD.ui.customview.DateBlock
                         android:id="@+id/destination_date"
                         android:layout_width="match_parent"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
 
                     </com.carrental.ShivaSD.ui.customview.DateBlock>

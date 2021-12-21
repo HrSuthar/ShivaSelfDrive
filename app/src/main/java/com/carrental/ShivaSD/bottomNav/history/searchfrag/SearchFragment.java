@@ -132,7 +132,7 @@ public class SearchFragment extends BottomSheetDialogFragment {
                         calender.setTime(date);
                         long msDiff = Calendar.getInstance().getTimeInMillis() - calender.getTimeInMillis();
                         long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
-                        if(daysDiff<=0 && status!=null) {
+                        if(daysDiff<0 && status!=null) {
                                 if(status.equals("Success")) {
                                     holder.cancelBook.setVisibility(View.VISIBLE);
                                     holder.cancelBook.setOnClickListener(v -> {

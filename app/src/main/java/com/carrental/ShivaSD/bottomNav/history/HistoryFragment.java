@@ -129,48 +129,49 @@ public class HistoryFragment extends Fragment {
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()) {
                     if (String.valueOf(dataSnapshot.getKey()).equals(userID)) {
 
-                        if (!srcLOC.isEmpty() & !destLOC.isEmpty() & !srcDate.isEmpty() & !destDate.isEmpty()) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                String rtnDate = String.valueOf(dataSnapshot1.child("ReturnDate").getValue());
-                                String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
-                                String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());
-    // image ,carname, carloc, destLoc, rtndate, pickupdate, priceString, RCno, Status, Phone
-                                if (deptLOC.equals(srcLOC) & rtnLOC.equals(destLOC) & rtnDate.equals(destDate)) {
-                                    histDetails.add(new String[]{
-                                            dataSnapshot1.child("CarImage").getValue(String.class),
-                                            dataSnapshot1.child("CarName").getValue(String.class),
-                                            deptLOC,
-                                            String.valueOf(dataSnapshot1.child("Destination").getValue()),
-                                            String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
-                                            srcDate,
-                                            dataSnapshot1.child("AmountPaid").getValue(String.class),
-                                            dataSnapshot1.getKey(),
-                                            dataSnapshot1.child("Status").getValue(String.class),
-                                            userID
-                                    });
-                                }
-                            }
-                        } else if (!srcLOC.isEmpty() & !destLOC.isEmpty() & !srcDate.isEmpty()) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                String deptDate = String.valueOf(dataSnapshot1.child("DepartDate").getValue());
-                                String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
-                                String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());
-                                if (deptLOC.equals(srcLOC) & rtnLOC.equals(destLOC) & deptDate.equals(srcDate)) {
-                                    histDetails.add(new String[]{
-                                            String.valueOf(dataSnapshot1.child("CarImage").getValue()),
-                                            String.valueOf(dataSnapshot1.child("CarName").getValue()),
-                                            deptLOC,
-                                            String.valueOf(dataSnapshot1.child("Destination").getValue()),
-                                            String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
-                                            deptDate,
-                                            String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
-                                            dataSnapshot1.getKey(),
-                                            dataSnapshot1.child("Status").getValue(String.class),
-                                            userID
-                                    });
-                                }
-                            }
-                        } else if (!srcLOC.isEmpty() & !destLOC.isEmpty()) {
+//                        if (!srcLOC.isEmpty() & !destLOC.isEmpty() & !srcDate.isEmpty() & !destDate.isEmpty()) {
+//                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                                String rtnDate = String.valueOf(dataSnapshot1.child("ReturnDate").getValue());
+//                                String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
+//                                String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());
+//    // image ,carname, carloc, destLoc, rtndate, pickupdate, priceString, RCno, Status, Phone
+//                                if (deptLOC.equals(srcLOC) & rtnLOC.equals(destLOC) & rtnDate.equals(destDate)) {
+//                                    histDetails.add(new String[]{
+//                                            dataSnapshot1.child("CarImage").getValue(String.class),
+//                                            dataSnapshot1.child("CarName").getValue(String.class),
+//                                            deptLOC,
+//                                            String.valueOf(dataSnapshot1.child("Destination").getValue()),
+//                                            String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
+//                                            srcDate,
+//                                            dataSnapshot1.child("AmountPaid").getValue(String.class),
+//                                            dataSnapshot1.getKey(),
+//                                            dataSnapshot1.child("Status").getValue(String.class),
+//                                            userID
+//                                    });
+//                                }
+//                            }
+//                        } else if (!srcLOC.isEmpty() & !destLOC.isEmpty() & !srcDate.isEmpty()) {
+//                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                                String deptDate = String.valueOf(dataSnapshot1.child("DepartDate").getValue());
+//                                String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
+//                                String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());
+//                                if (deptLOC.equals(srcLOC) & rtnLOC.equals(destLOC) & deptDate.equals(srcDate)) {
+//                                    histDetails.add(new String[]{
+//                                            String.valueOf(dataSnapshot1.child("CarImage").getValue()),
+//                                            String.valueOf(dataSnapshot1.child("CarName").getValue()),
+//                                            deptLOC,
+//                                            String.valueOf(dataSnapshot1.child("Destination").getValue()),
+//                                            String.valueOf(dataSnapshot1.child("ReturnDate").getValue()),
+//                                            deptDate,
+//                                            String.valueOf(dataSnapshot1.child("AmountPaid").getValue()),
+//                                            dataSnapshot1.getKey(),
+//                                            dataSnapshot1.child("Status").getValue(String.class),
+//                                            userID
+//                                    });
+//                                }
+//                            }
+//                        } else
+                            if (!srcLOC.isEmpty() & !destLOC.isEmpty()) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 String deptLOC = String.valueOf(dataSnapshot1.child("Source").getValue());
                                 String rtnLOC = String.valueOf(dataSnapshot1.child("Destination").getValue());

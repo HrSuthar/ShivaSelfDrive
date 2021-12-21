@@ -20,6 +20,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class CarRemoveFragment extends Fragment {
 
     EditText carName, RCNo;
@@ -27,6 +33,7 @@ public class CarRemoveFragment extends Fragment {
     TextInputLayout modelError, registrationError;
     boolean isNameValid,isRegValid;
     DatabaseReference myRef= FirebaseDatabase.getInstance().getReference("CAR");
+    DatabaseReference histRef= FirebaseDatabase.getInstance().getReference("HISTORY");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,34 +46,65 @@ public class CarRemoveFragment extends Fragment {
 
         modelError =  root.findViewById(R.id.modelError);
         registrationError = root.findViewById(R.id.registrationError);
-
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
 
         RemoveBtn.setOnClickListener(v -> {
-            if(SetValidation(v)){
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            if(SetValidation(v)) {
+
+                histRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.child("carRegNumber").getChildren()) {
-                            if (String.valueOf(dataSnapshot.getValue()).equals(RCNo.getText().toString())) {
-                                String carNumber = dataSnapshot.getKey();
-                                assert carNumber != null;
-                                myRef.child("carRegNumber").child(carNumber).removeValue();
-                                myRef.child("capacity").child(carNumber).removeValue();
-                                myRef.child("carmodels").child(carNumber).removeValue();
-                                myRef.child("fueltype").child(carNumber).removeValue();
-                                myRef.child("images").child(carNumber).removeValue();
-                                myRef.child("mileage").child(carNumber).removeValue();
-                                myRef.child("rate").child(carNumber).removeValue();
+                        for (DataSnapshot dataSnapshots : snapshot.getChildren()) {
+                            for (DataSnapshot dataSnapshot : dataSnapshots.getChildren()) {
+                                if (String.valueOf(dataSnapshot.getKey()).equals(RCNo.getText().toString())
+                                        && dataSnapshot.child("Status").getValue(String.class).equals("Success")) {
+                                    try {
+                                        String srcDate = dataSnapshot.child("DepartDate").getValue(String.class);
+                                        String destDate = dataSnapshot.child("ReturnDate").getValue(String.class);
+                                        Date date1 = format.parse(srcDate);
+                                        Date date2 = format.parse(destDate);
+                                        if (date1.getTime() > Calendar.getInstance().getTimeInMillis() || date2.getTime() > Calendar.getInstance().getTimeInMillis()) {
+                                            Toast.makeText(root.getContext(), "Car is Booked From: " + srcDate + " - " + destDate, Toast.LENGTH_LONG).show();
+                                        } else {
+                                            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for (DataSnapshot dataSnapshot : snapshot.child("carRegNumber").getChildren()) {
+                                                        if (String.valueOf(dataSnapshot.getValue()).equals(RCNo.getText().toString())) {
+                                                            String carNumber = dataSnapshot.getKey();
+                                                            assert carNumber != null;
+                                                            myRef.child("carRegNumber").child(carNumber).removeValue();
+                                                            myRef.child("capacity").child(carNumber).removeValue();
+                                                            myRef.child("carmodels").child(carNumber).removeValue();
+                                                            myRef.child("fueltype").child(carNumber).removeValue();
+                                                            myRef.child("images").child(carNumber).removeValue();
+                                                            myRef.child("mileage").child(carNumber).removeValue();
+                                                            myRef.child("rate").child(carNumber).removeValue();
 
-                                Toast.makeText(root.getContext(), "Entry Deleted Successful", Toast.LENGTH_LONG).show();
-                                break;
+                                                            Toast.makeText(root.getContext(), "Entry Deleted Successful", Toast.LENGTH_LONG).show();
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    Toast.makeText(root.getContext(), "Entry Not Found", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(root.getContext(), "Entry Not Found", Toast.LENGTH_LONG).show();
+
                     }
                 });
             }

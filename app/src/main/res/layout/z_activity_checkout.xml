@@ -236,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:alpha="0.6"
-                            android:text="NPH72828383"
+                            android:text="Aadhaar Card Need to be Submitted"
                             android:textColor="@color/teal_200"
                             android:textSize="@dimen/_16sdp" />
 
