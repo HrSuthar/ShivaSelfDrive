@@ -62,14 +62,19 @@ public class CarRemoveFragment extends Fragment {
                                         String destDate = dataSnapshot.child("ReturnDate").getValue(String.class);
                                         Date date1 = format.parse(srcDate);
                                         Date date2 = format.parse(destDate);
-                                        if (date1.getTime() > Calendar.getInstance().getTimeInMillis() || date2.getTime() > Calendar.getInstance().getTimeInMillis())
+                                        if (date1.getTime() < Calendar.getInstance().getTimeInMillis() && date2.getTime() < Calendar.getInstance().getTimeInMillis()){
+                                            carRemovingFromFirebase(root);
+                                        }
+                                        else {
                                             Toast.makeText(root.getContext(), "Car is Booked From: " + srcDate + " - " + destDate+" , so can't be Removed", Toast.LENGTH_LONG).show();
-                                        else carRemovingFromFirebase(root);
+                                        }
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                }else carRemovingFromFirebase(root);
+                                }else{
+                                    carRemovingFromFirebase(root);
+                                }
                             }
                         }
                     }
@@ -108,7 +113,6 @@ public class CarRemoveFragment extends Fragment {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(root.getContext(), "Entry Not Found", Toast.LENGTH_LONG).show();
